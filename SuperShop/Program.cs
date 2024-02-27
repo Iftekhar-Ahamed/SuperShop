@@ -3,6 +3,7 @@ using SuperShop.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSignalR();
 // Add services to the container.
 builder.Services.AddInfrastructure();
 builder.Services.AddControllers();
