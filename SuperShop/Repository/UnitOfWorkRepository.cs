@@ -11,5 +11,6 @@ namespace SuperShop.Repository
 
         ISuperShopRepository IUnitOfWorkRepository.SuperShopRepository => new SuperShopRepository();
 
+        IAuthenticationRepository IUnitOfWorkRepository.AuthenticationRepository => new AuthenticationRepository(_configuration);
     }
 }
