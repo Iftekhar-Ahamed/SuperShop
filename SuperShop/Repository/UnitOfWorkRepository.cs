@@ -9,7 +9,7 @@ namespace SuperShop.Repository
             _configuration = configuration;
         }
 
-        ISuperShopRepository IUnitOfWorkRepository.SuperShopRepository => new SuperShopRepository();
+        ISuperShopRepository IUnitOfWorkRepository.SuperShopRepository => new SuperShopRepository(_configuration);
 
         IAuthenticationRepository IUnitOfWorkRepository.AuthenticationRepository => new AuthenticationRepository(_configuration);
     }

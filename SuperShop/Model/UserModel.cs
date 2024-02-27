@@ -1,13 +1,24 @@
-﻿namespace SuperShop.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SuperShop.Model
 {
     public class UserModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
+        [Range(1, long.MaxValue, ErrorMessage = "Please Select UserType value bigger than {1}")]
         public long UserTypeId { get; set; }
+        [Required]
+        [StringLength(50)]
         public string UserName { get; set; } = string.Empty;
+        [Required]
+        [StringLength(50)]
         public string UserFullName { get; set; } = string.Empty;
+
+        [StringLength(250)]
         public string? ConnectionId { get; set; }
         public bool IsActive { get; set; }
+        [Required]
+        [StringLength(50)]
         public string? Password { get; set; }
     }
 }
