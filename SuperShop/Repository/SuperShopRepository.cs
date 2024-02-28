@@ -41,6 +41,47 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<long> UpdateUserAsync(UserModel userModel)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[TblUser]
+                           SET [UserTypeId] = @UserTypeId
+                              ,[UserName] = @UserName
+                              ,[Password] = @Password
+                              ,[UserFullName] = @UserFullName
+                              ,[ConnectionId] = @ConnectionId
+                              ,[IsActive] = @IsActive
+                            WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, userModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<UserModel?> GetUserByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM dbo.TblUser WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<UserModel>(sql, new { Id});
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<long> CreateLogAsync(LogModel logModel)
         {
             try

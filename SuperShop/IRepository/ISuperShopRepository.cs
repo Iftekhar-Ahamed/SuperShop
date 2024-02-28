@@ -5,6 +5,8 @@ namespace SuperShop.IRepository
     public interface ISuperShopRepository
     {
         Task<long> CreateUserAsync(UserModel userModel);
+        Task<long> UpdateUserAsync(UserModel userModel);
+        Task<UserModel> GetUserByIdAsync(long UserId);
         Task<long> CreateLogAsync(LogModel logModel);
         Task<long> SaveUserConnectionIdAsync(String ConnectionId,long UserId);
         Task<MenuModel?> GetMenuByIdAsync(long MenuId);

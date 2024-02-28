@@ -28,6 +28,27 @@ namespace SuperShop.Controllers
             return Ok(res);
 
         }
+        [HttpGet]
+        [Route("GetUserById")]
+        public async Task<IActionResult> GetUserById(long Id)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+
+            var res = await _unitOfWorkService.SuperShopService.GetUserById(Id);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("UpdateUserById")]
+        public async Task<IActionResult> UpdateUserById(UserModel userModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.UpdateUserById(userModel, ActionBy);
+            return Ok(res);
+
+        }
         [HttpPost]
         [Route("CreateMenu")]
         public async Task<IActionResult> CreateMenu(MenuModel menuModel)

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using SuperShop.IService;
-using SuperShop.Model;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace SuperShop.Middleware
 {
@@ -86,7 +84,7 @@ namespace SuperShop.Middleware
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("Unable to decode the header");
             }
         }
 

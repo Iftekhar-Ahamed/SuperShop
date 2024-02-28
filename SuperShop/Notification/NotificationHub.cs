@@ -11,21 +11,6 @@ public class NotificationHub : Hub
     {
         _unitOfWorkRepository = unitOfWorkRepository;
     }
-    public async Task SendNotificationToAll(string message)
-    {
-        await Clients.All.SendAsync("broadcastMessage", message);
-    }
-    public async Task SendNotificationToClient(string message)
-    {
-        try
-        {
-            await Clients.Client("").SendAsync("ReceivedPersonalNotification", message);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-    }
     public override Task OnConnectedAsync()
     {
         Clients.Caller.SendAsync("OnConnected");

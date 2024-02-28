@@ -22,7 +22,7 @@ namespace SuperShop.Service
             var msg = new MessageHelperModel();
             if (res != 0)
             {
-                msg.Message = "Sucessfully Log Created";
+                msg.Message = "Successfully Log Created";
                 msg.StatusCode = 200;
             }
             else
@@ -32,7 +32,23 @@ namespace SuperShop.Service
             }
             return msg;
         }
-
+        public async Task<KeyValuePair<UserModel?, MessageHelperModel>> GetUserById(long UserId)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetUserByIdAsync(UserId);
+            var msg = new MessageHelperModel();
+            if (res != null)
+            {
+                res.Password = "";
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Invalid User Id";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res,msg);
+        }
         public async Task<MessageHelperModel> CreateUser(UserModel userModel,long ActionBy)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.CreateUserAsync(userModel);
@@ -61,6 +77,45 @@ namespace SuperShop.Service
                 msg.StatusCode = 400;
             }
             return msg;
+        }
+        public async Task<MessageHelperModel> UpdateUserById(UserModel userModel, long ActionBy)
+        {
+            var previous=  await _unitOfWorkRepository.SuperShopRepository.GetUserByIdAsync(userModel.Id??0);
+            var msg = new MessageHelperModel();
+
+            if (previous != null)
+            {
+                var res = await _unitOfWorkRepository.SuperShopRepository.UpdateUserAsync(userModel);
+                
+                if (res != 0)
+                {
+                    var log = new LogModel
+                    {
+                        TableId = 1,
+                        ActionBy = ActionBy,
+                        ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,userModel),
+                        JsonPayload = JsonSerializer.Serialize(userModel),
+                        ActionDate = DateTime.Now,
+                        IsActive = true,
+                        ActionType = "Update"
+                    };
+
+                    await CreateLog(log);
+
+                    msg.Message = "Sucessfully Created";
+                    msg.StatusCode = 200;
+                }
+                else
+                {
+                    msg.Message = "Faild to Created";
+                    msg.StatusCode = 400;
+                }
+                return msg;
+            }
+            msg.Message = "No User Found in given id";
+            msg.StatusCode= 400;
+            return msg;
+            
         }
         public async Task<MessageHelperModel> CreateMenu(MenuModel menuModel,long ActionBy)
         {
