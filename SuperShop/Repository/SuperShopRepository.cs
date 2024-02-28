@@ -28,7 +28,6 @@ namespace SuperShop.Repository
                            ,@UserName
                            ,@Password
                            ,@UserFullName
-                           ,@ConnectionId
                            ,@IsActive)";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
@@ -66,6 +65,49 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.ExecuteAsync(sql, logModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<long> SaveUserConnectionIdAsync(string ConnectionId, long UserId)
+        {
+            try
+            {
+                var sql = @"UPDATE SET [ConnectionId] = @ConnectionId [dbo].[TblUser] WHERE [Id] = @UserId";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, new { ConnectionId, UserId});
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> CreateMenuAsync(MenuModel menuModel)
+        {
+            try
+            {
+                menuModel.IsActive = true;
+                var sql = @"INSERT INTO [dbo].[Menu]
+                           ([MenuName]
+                           ,[MenuUrl]
+                           ,[IsActive])
+                            VALUES
+                           (@MenuName
+                           ,@MenuUrl
+                           ,@IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, menuModel);
                     return result;
                 }
             }

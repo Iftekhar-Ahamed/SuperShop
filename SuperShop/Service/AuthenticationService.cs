@@ -30,7 +30,7 @@ namespace SuperShop.Service
                 if (user.Password == PassWord)
                 {
                     msg.Message = "Welcome User";
-                    msg.Token = GenerateToken(user);
+                    msg.Token = GenerateToken(user,"Access") + " "+ GenerateToken(user, "Refresh");
                 }
                 else
                 {
@@ -40,9 +40,18 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(user, msg);
         }
-        public string GenerateToken(UserModel user)
+        public string GenerateToken(UserModel user,string type)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserFullName), new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) };
+            long lifetime = 0;
+            if(type == "Access")
+            {
+                lifetime = 2;
+            }
+            else
+            {
+                lifetime = 10;
+            }
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserFullName), new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) , new Claim("Type", type) };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -51,11 +60,29 @@ namespace SuperShop.Service
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddDays(lifetime),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public async Task<MessageHelperModel> GetNewAccessToken(UserModel userModel)
+        {
+
+            var res = GenerateToken(userModel, "Access");
+            var msg = new MessageHelperModel();
+            if (res != null)
+            {
+                msg.Token = res;
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild";
+                msg.StatusCode = 400;
+            }
+            return msg;
         }
 
     }

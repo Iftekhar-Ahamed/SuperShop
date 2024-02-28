@@ -31,9 +31,9 @@ public class NotificationHub : Hub
         Clients.Caller.SendAsync("OnConnected");
         return base.OnConnectedAsync();
     }
-    public async Task SaveUserConnection(byte id)
+    public async Task SaveUserConnection(long UserId)
     {
-
+        await _unitOfWorkRepository.SuperShopRepository.SaveUserConnectionIdAsync("", UserId);
     }
     public override async Task OnDisconnectedAsync(Exception? exception)
     {

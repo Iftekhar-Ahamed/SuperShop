@@ -1,6 +1,7 @@
 ﻿using SuperShop.IRepository;
 using SuperShop.IService;
 using SuperShop.Model;
+using System;
 using System.Text.Json;
 
 namespace SuperShop.Service
@@ -59,5 +60,34 @@ namespace SuperShop.Service
             }
             return msg;
         }
+        public async Task<MessageHelperModel> CreateMenu(MenuModel menuModel,long ActionBy)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.CreateMenuAsync(menuModel);
+            var msg = new MessageHelperModel();
+            if(res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 2,
+                    ActionBy = ActionBy,
+                    ActionChanges = "New Menu " + menuModel.MenuName + " Created ",
+                    JsonPayload = JsonSerializer.Serialize(menuModel),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Create"
+                };
+
+                await CreateLog(log);
+                msg.Message = "Sucessfully Created";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to Created";
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        
     }
 }
