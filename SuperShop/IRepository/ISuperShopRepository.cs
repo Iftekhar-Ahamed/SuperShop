@@ -14,5 +14,9 @@ namespace SuperShop.IRepository
         Task<long> UpdateMenuAsync(MenuModel menuModel);
         Task<int> CreateUserMenuPermissionAsync(MenuUserPermissionModel obj);
         Task<int> UpdateUserMenuPermissionAsync(MenuUserPermissionModel obj);
+        Task<int> CreateItemTransactionTypeAsync(ItemTransactionTypeModel  itemTransactionTypeModel);
+        Task<int> UpdateItemTransactionTypeAsync(ItemTransactionTypeModel itemTransactionTypeModel);
+        Task<ItemTransactionTypeModel?> GetItemTransactionTypeAsync(long Id,bool? IsActive);
+        Task<List<ItemTransactionTypeModel>?> GetAllItemTransactionTypeAsync();
     }
 }

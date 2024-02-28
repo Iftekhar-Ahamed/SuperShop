@@ -84,7 +84,7 @@ namespace SuperShop.Middleware
             }
             catch (Exception ex)
             {
-                throw new Exception("Unable to decode the header");
+                throw ;
             }
         }
 

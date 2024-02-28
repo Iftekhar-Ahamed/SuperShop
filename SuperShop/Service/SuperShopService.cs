@@ -213,10 +213,84 @@ namespace SuperShop.Service
             }
             else
             {
+                msg.Message = "Faild to "+OperationType;
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        public async Task<MessageHelperModel> CreateItemTransactionType(ItemTransactionTypeModel itemTransactionTypeModel, long ActionBy)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.CreateItemTransactionTypeAsync(itemTransactionTypeModel);
+            var msg = new MessageHelperModel();
+            if (res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 3,
+                    ActionBy = ActionBy,
+                    ActionChanges = "New Item Transaction Type Added: "+itemTransactionTypeModel.TransactionName,
+                    JsonPayload = JsonSerializer.Serialize(itemTransactionTypeModel),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Create"
+                };
+
+                await CreateLog(log);
+                msg.Message = "Sucessfully Created";
+                msg.StatusCode = 200;
+            }
+            else
+            {
                 msg.Message = "Faild to Created";
                 msg.StatusCode = 400;
             }
             return msg;
+
+        }
+        public async Task<MessageHelperModel> UpdateItemTransactionType(ItemTransactionTypeModel itemTransactionTypeModel, long ActionBy)
+        {
+            var previous = await _unitOfWorkRepository.SuperShopRepository.GetItemTransactionTypeAsync(itemTransactionTypeModel.Id,null);
+            var res = await _unitOfWorkRepository.SuperShopRepository.UpdateItemTransactionTypeAsync(itemTransactionTypeModel);
+            var msg = new MessageHelperModel();
+            if (res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 3,
+                    ActionBy = ActionBy,
+                    ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,itemTransactionTypeModel),
+                    JsonPayload = JsonSerializer.Serialize(itemTransactionTypeModel),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Update"
+                };
+
+                await CreateLog(log);
+                msg.Message = "Sucessfully Updated";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to Update";
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        public async Task<KeyValuePair<List<ItemTransactionTypeModel>?,MessageHelperModel>> GeAlltItemTransactionType()
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync();
+            var msg = new MessageHelperModel();
+            if (res != null)
+            {
+                msg.Message = "Sucessfully Get";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to Get";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res,msg);
         }
 
     }

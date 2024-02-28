@@ -21,8 +21,7 @@ namespace SuperShop.Controllers
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser(UserModel userModel)
         {
-            //var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            long ActionBy = 1;
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var res = await _unitOfWorkService.SuperShopService.CreateUser(userModel,ActionBy);
             return Ok(res);
@@ -32,9 +31,6 @@ namespace SuperShop.Controllers
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById(long Id)
         {
-            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            
-
             var res = await _unitOfWorkService.SuperShopService.GetUserById(Id);
             return Ok(res);
 
@@ -76,6 +72,35 @@ namespace SuperShop.Controllers
             var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var res = await _unitOfWorkService.SuperShopService.UserMenuPermission(menuUserPermissionModel, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("CreateItemTransactionType")]
+        public async Task<IActionResult> CreateItemTransactionType(ItemTransactionTypeModel itemTransactionTypeModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.CreateItemTransactionType(itemTransactionTypeModel, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("UpdateItemTransactionType")]
+        public async Task<IActionResult> UpdateItemTransactionType(ItemTransactionTypeModel itemTransactionTypeModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.UpdateItemTransactionType(itemTransactionTypeModel, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GeAlltItemTransactionType")]
+        public async Task<IActionResult> GeAlltItemTransactionType()
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GeAlltItemTransactionType();
             return Ok(res);
 
         }

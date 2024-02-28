@@ -12,5 +12,8 @@ namespace SuperShop.IService
         Task<MessageHelperModel> CreateMenu(MenuModel menuModel, long ActionBy);
         Task<MessageHelperModel> UpdateMenu(MenuModel menuModel, long ActionBy);
         Task<MessageHelperModel> UserMenuPermission(MenuUserPermissionModel menuUserPermissionModel, long ActionBy);
+        Task<MessageHelperModel> CreateItemTransactionType(ItemTransactionTypeModel obj, long ActionBy);
+        Task<MessageHelperModel> UpdateItemTransactionType(ItemTransactionTypeModel itemTransactionTypeModel, long ActionBy);
+        Task<KeyValuePair<List<ItemTransactionTypeModel>?, MessageHelperModel>> GeAlltItemTransactionType();
     }
 }

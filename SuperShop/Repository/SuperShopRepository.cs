@@ -242,5 +242,81 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<int> CreateItemTransactionTypeAsync(ItemTransactionTypeModel obj)
+        {
+            try
+            {
+                var sql = @"INSERT INTO [dbo].[ItemTransactionType]
+                           ([TransactionName]
+                           ,[IsActive])
+                            VALUES
+                           (@TransactionName
+                           ,@IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, obj);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<int> UpdateItemTransactionTypeAsync(ItemTransactionTypeModel obj)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[ItemTransactionType]
+                            SET [TransactionName] = @TransactionName
+                                ,[IsActive] = @IsActive
+                            WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, obj);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<ItemTransactionTypeModel?> GetItemTransactionTypeAsync(long Id,bool? IsActive)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM dbo.ItemTransactionType WHERE Id = @Id and (ISNULL(@IsActive,1)=1 or IsActive = @IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql, new { Id, IsActive});
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<ItemTransactionTypeModel>?> GetAllItemTransactionTypeAsync()
+        {
+            try
+            {
+                var sql = @"SELECT * FROM dbo.ItemTransactionType WHERE IsActive = 1";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
