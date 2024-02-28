@@ -7,6 +7,10 @@ namespace SuperShop.IRepository
         Task<long> CreateUserAsync(UserModel userModel);
         Task<long> CreateLogAsync(LogModel logModel);
         Task<long> SaveUserConnectionIdAsync(String ConnectionId,long UserId);
+        Task<MenuModel?> GetMenuByIdAsync(long MenuId);
         Task<long> CreateMenuAsync(MenuModel menuModel);
+        Task<long> UpdateMenuAsync(MenuModel menuModel);
+        Task<int> CreateUserMenuPermissionAsync(MenuUserPermissionModel obj);
+        Task<int> UpdateUserMenuPermissionAsync(MenuUserPermissionModel obj);
     }
 }

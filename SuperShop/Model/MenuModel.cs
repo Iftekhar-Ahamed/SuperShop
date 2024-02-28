@@ -4,6 +4,7 @@ namespace SuperShop.Model
 {
     public class MenuModel
     {
+        public int Id { get; set; }
         [Required]
         [StringLength(50)]
         public string MenuName { get; set; } = String.Empty;

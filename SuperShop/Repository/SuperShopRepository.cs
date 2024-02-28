@@ -91,6 +91,24 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<MenuModel?> GetMenuByIdAsync(long MenuId)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM dbo.Menu
+                            WHERE Id = @MenuId";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<MenuModel>(sql,new { MenuId });
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<long> CreateMenuAsync(MenuModel menuModel)
         {
             try
@@ -108,6 +126,73 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.ExecuteAsync(sql, menuModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> UpdateMenuAsync(MenuModel menuModel)
+        {
+            try
+            {
+                menuModel.IsActive = true;
+                var sql = @"UPDATE [dbo].[Menu]
+                            SET [MenuName] = @MenuName
+                                ,[MenuUrl] = @MenuUrl
+                                ,[IsActive] = @IsActive
+                            WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, menuModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<int> CreateUserMenuPermissionAsync(MenuUserPermissionModel obj)
+        {
+            try
+            {
+                var sql = @"INSERT INTO [dbo].[UserMenuPermission]
+                           ([MenuId]
+                           ,[UserId]
+                           ,[IsActive])
+                            VALUES
+                           (@MenuId
+                           ,@UserId
+                           ,@IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, obj);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<int> UpdateUserMenuPermissionAsync(MenuUserPermissionModel obj)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[UserMenuPermission]
+                            SET [MenuId] = @MenuId
+                                ,[UserId] = @UserId
+                                ,[IsActive] = @IsActive
+                             WHERE [Id] = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, obj);
                     return result;
                 }
             }

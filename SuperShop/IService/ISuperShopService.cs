@@ -8,5 +8,7 @@ namespace SuperShop.IService
         Task<MessageHelperModel> CreateUser(UserModel userModel, long ActionBy);
         Task<MessageHelperModel> CreateLog(LogModel logModel);
         Task<MessageHelperModel> CreateMenu(MenuModel menuModel, long ActionBy);
+        Task<MessageHelperModel> UpdateMenu(MenuModel menuModel, long ActionBy);
+        Task<MessageHelperModel> UserMenuPermission(MenuUserPermissionModel menuUserPermissionModel, long ActionBy);
     }
 }

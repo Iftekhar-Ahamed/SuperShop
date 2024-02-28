@@ -12,7 +12,9 @@ namespace SuperShop.Service
             _configuration = configuration;
         }
 
-        ISuperShopService IUnitOfWorkService.SuperShopService =>  new SuperShopService(_unitOfWorkRepository);
+        ISuperShopService IUnitOfWorkService.SuperShopService =>  new SuperShopService(_unitOfWorkRepository,this);
         IAuthenticationService IUnitOfWorkService.AuthenticationService =>  new AuthenticationService(_unitOfWorkRepository,_configuration);
+
+        ILogService IUnitOfWorkService.LogService => new LogService();
     }
 }

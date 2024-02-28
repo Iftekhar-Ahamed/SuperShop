@@ -38,6 +38,26 @@ namespace SuperShop.Controllers
             return Ok(res);
 
         }
+        [HttpPost]
+        [Route("UpdateMenu")]
+        public async Task<IActionResult> UpdateMenu(MenuModel menuModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.UpdateMenu(menuModel, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("UserMenuPermission")]
+        public async Task<IActionResult> UserMenuPermission(MenuUserPermissionModel menuUserPermissionModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.UserMenuPermission(menuUserPermissionModel, ActionBy);
+            return Ok(res);
+
+        }
 
     }
 }
