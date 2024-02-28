@@ -19,7 +19,8 @@ namespace SuperShop.Controllers
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser(UserModel userModel)
         {
-            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            long ActionBy = 1;
 
             var res = await _unitOfWorkService.SuperShopService.CreateUser(userModel,ActionBy);
             return Ok(res);

@@ -40,7 +40,7 @@ namespace SuperShop.Service
                 {
                     TableId = 1,
                     ActionBy = ActionBy,
-                    ActionChanges = "New User" + userModel.UserName + " Created ",
+                    ActionChanges = "New User " + userModel.UserName + " Created ",
                     JsonPayload = JsonSerializer.Serialize(userModel),
                     ActionDate = DateTime.Now,
                     IsActive = true,
