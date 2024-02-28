@@ -5,10 +5,11 @@ using SuperShop.Model;
 
 namespace SuperShop.Repository
 {
-    public class SuperShopRepository:ISuperShopRepository
+    public class SuperShopRepository : ISuperShopRepository
     {
         private readonly IConfiguration _configuration;
-        public SuperShopRepository(IConfiguration configuration) { 
+        public SuperShopRepository(IConfiguration configuration)
+        {
             _configuration = configuration;
         }
 
@@ -21,7 +22,6 @@ namespace SuperShop.Repository
                            ,[UserName]
                            ,[Password]
                            ,[UserFullName]
-                           ,[ConnectionId]
                            ,[IsActive])
                             VALUES
                            (@UserTypeId
@@ -29,11 +29,11 @@ namespace SuperShop.Repository
                            ,@Password
                            ,@UserFullName
                            ,@ConnectionId
-                           ,@IsActive)";
+                           ,@IsActive";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql,userModel);
+                    var result = await connection.ExecuteAsync(sql, userModel);
                     return result;
                 }
             }
@@ -42,7 +42,7 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<long> CreateLogAsync(LogModel  logModel)
+        public async Task<long> CreateLogAsync(LogModel logModel)
         {
             try
             {

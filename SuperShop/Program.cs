@@ -1,7 +1,9 @@
 using SuperShop;
+using SuperShop.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSignalR();
 // Add services to the container.
 builder.Services.AddInfrastructure();
 builder.Services.AddControllers();
@@ -17,6 +19,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseHttpsRedirection();
 
