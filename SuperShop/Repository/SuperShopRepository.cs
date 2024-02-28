@@ -29,7 +29,7 @@ namespace SuperShop.Repository
                            ,@Password
                            ,@UserFullName
                            ,@ConnectionId
-                           ,@IsActive";
+                           ,@IsActive)";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
