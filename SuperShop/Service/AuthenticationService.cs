@@ -24,6 +24,7 @@ namespace SuperShop.Service
             if (user == null)
             {
                 msg.Message = "Invalid UserName";
+                msg.StatusCode = 401;
             }
             else
             {
@@ -31,10 +32,12 @@ namespace SuperShop.Service
                 {
                     msg.Message = "Welcome User";
                     msg.Token = GenerateToken(user,"Access") + " "+ GenerateToken(user, "Refresh");
+                    msg.StatusCode = 200;
                 }
                 else
                 {
                     msg.Message = "Invalid Password";
+                    msg.StatusCode = 401;
                 }
                 user.Password = null;
             }

@@ -7,6 +7,7 @@ namespace SuperShop.IRepository
         Task<long> CreateUserAsync(UserModel userModel);
         Task<long> UpdateUserAsync(UserModel userModel);
         Task<UserModel> GetUserByIdAsync(long UserId);
+        Task<List<AllUserInformationViewModel>> GetAllUserAsync(GetDataConfigModel getDataConfigModel);
         Task<long> CreateLogAsync(LogModel logModel);
         Task<long> SaveUserConnectionIdAsync(String ConnectionId,long UserId);
         Task<MenuModel?> GetMenuByIdAsync(long MenuId);
@@ -18,5 +19,6 @@ namespace SuperShop.IRepository
         Task<int> UpdateItemTransactionTypeAsync(ItemTransactionTypeModel itemTransactionTypeModel);
         Task<ItemTransactionTypeModel?> GetItemTransactionTypeAsync(long Id,bool? IsActive);
         Task<List<ItemTransactionTypeModel>?> GetAllItemTransactionTypeAsync();
+        Task<List<MenuModel>> GetMenuPermissionByUserIdAsync(long UserId);
     }
 }

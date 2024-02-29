@@ -82,6 +82,40 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<List<AllUserInformationViewModel>> GetAllUserAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+
+                var sql = @"SELECT * FROM dbo.TblUser u
+                            JOIN [dbo].[UserType] t ON u.UserTypeId = t.Id
+                            WHERE 
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = u.IsActive)
+                                and (u.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%')";
+                if (getDataConfigModel.OrderBy != null && getDataConfigModel.OrderColumn != null)
+                {
+                    var allowedColumns = new[] { "UserFullName", "UserName", "Id", "UserTypeId" }; 
+                    if (allowedColumns.Contains(getDataConfigModel.OrderColumn, StringComparer.OrdinalIgnoreCase))
+                    {
+                        sql += $" ORDER BY {getDataConfigModel.OrderColumn} {getDataConfigModel.OrderBy}";
+                    }
+                }
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<AllUserInformationViewModel>(sql, getDataConfigModel);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<long> CreateLogAsync(LogModel logModel)
         {
             try
@@ -310,6 +344,25 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<MenuModel>> GetMenuPermissionByUserIdAsync(long UserId)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM [dbo].[UserMenuPermission] mp
+                            JOIN [dbo].[Menu] m ON m.Id = mp.MenuId
+                            WHERE mp.UserId = @UserId and mp.IsActive = 1 and m.IsActive = 1";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<MenuModel>(sql,new {UserId });
                     return result.ToList();
                 }
             }

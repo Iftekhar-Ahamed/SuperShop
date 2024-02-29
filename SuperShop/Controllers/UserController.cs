@@ -104,6 +104,24 @@ namespace SuperShop.Controllers
             return Ok(res);
 
         }
+        [HttpGet]
+        [Route("GeAllUser")]
+        public async Task<IActionResult> GeAllUser([FromQuery]GetDataConfigModel getDataConfigModel)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetAllUser(getDataConfigModel);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetMenuPermissionByUserId")]
+        public async Task<IActionResult> GetMenuPermissionByUserId(long UserId)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetMenuPermissionByUserId(UserId);
+            return Ok(res);
+
+        }
 
     }
 }

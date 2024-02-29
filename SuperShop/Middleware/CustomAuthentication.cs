@@ -35,7 +35,9 @@ namespace SuperShop.Middleware
                     var token = httpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
                     if (token == null)
                     {
-                        throw new Exception("Token Not Found");
+                        httpContext.Response.StatusCode = 401;
+                        await httpContext.Response.WriteAsync("Token Not Found");
+                        return;
                     }
 
                     var handler = new JwtSecurityTokenHandler();
@@ -43,7 +45,9 @@ namespace SuperShop.Middleware
 
                     if (jsonToken == null)
                     {
-                        throw new Exception("Invalid Token");
+                        httpContext.Response.StatusCode = 401;
+                        await httpContext.Response.WriteAsync("Invalid Token");
+                        return;
                     }
 
 
@@ -78,7 +82,9 @@ namespace SuperShop.Middleware
                 }
                 else
                 {
-                    throw new Exception("URL Is Not Valid");
+                    httpContext.Response.StatusCode = 401;
+                    await httpContext.Response.WriteAsync("URL Is Not Valid");
+                    return;
                 }
 
             }

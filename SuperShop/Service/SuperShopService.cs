@@ -49,6 +49,24 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(res,msg);
         }
+        public async Task<KeyValuePair<PaginationModel?, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel)
+        {
+            var res = new PaginationModel();
+            res.data = await _unitOfWorkRepository.SuperShopRepository.GetAllUserAsync(getDataConfigModel);
+            var msg = new MessageHelperModel();
+            if (res.data != null)
+            {
+                res.total = res.data.Count;
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Invalid User Id";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
+        }
         public async Task<MessageHelperModel> CreateUser(UserModel userModel,long ActionBy)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.CreateUserAsync(userModel);
@@ -102,12 +120,12 @@ namespace SuperShop.Service
 
                     await CreateLog(log);
 
-                    msg.Message = "Sucessfully Created";
+                    msg.Message = "Sucessfully Update";
                     msg.StatusCode = 200;
                 }
                 else
                 {
-                    msg.Message = "Faild to Created";
+                    msg.Message = "Faild to Update";
                     msg.StatusCode = 400;
                 }
                 return msg;
@@ -290,6 +308,14 @@ namespace SuperShop.Service
                 msg.Message = "Faild to Get";
                 msg.StatusCode = 400;
             }
+            return KeyValuePair.Create(res,msg);
+        }
+        public async Task<KeyValuePair<List<MenuModel>?, MessageHelperModel>> GetMenuPermissionByUserId(long UserId)
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuPermissionByUserIdAsync(UserId);
+            msg.Message = "Sucessfull";
+            msg.StatusCode = 200;
             return KeyValuePair.Create(res,msg);
         }
 
