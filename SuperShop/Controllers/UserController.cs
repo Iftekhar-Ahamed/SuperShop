@@ -35,6 +35,14 @@ namespace SuperShop.Controllers
             return Ok(res);
 
         }
+        [HttpGet]
+        [Route("GetUserInformationById")]
+        public async Task<IActionResult> GetUserInformationById(long Id)
+        {
+            var res = await _unitOfWorkService.SuperShopService.GetUserInformationById(Id);
+            return Ok(res);
+
+        }
         [HttpPost]
         [Route("UpdateUserById")]
         public async Task<IActionResult> UpdateUserById(UserModel userModel)
@@ -42,6 +50,16 @@ namespace SuperShop.Controllers
             var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var res = await _unitOfWorkService.SuperShopService.UpdateUserById(userModel, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("DeleteUserById")]
+        public async Task<IActionResult> DeleteUserById([FromBody] long UserId)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.DeleteUserById(UserId, ActionBy);
             return Ok(res);
 
         }
@@ -66,12 +84,12 @@ namespace SuperShop.Controllers
 
         }
         [HttpPost]
-        [Route("UserMenuPermission")]
-        public async Task<IActionResult> UserMenuPermission(MenuUserPermissionModel menuUserPermissionModel)
+        [Route("CreateUpdateUserMenuPermission")]
+        public async Task<IActionResult> CreateUpdateUserMenuPermission(MenuUserPermissionModel menuUserPermissionModel)
         {
             var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var res = await _unitOfWorkService.SuperShopService.UserMenuPermission(menuUserPermissionModel, ActionBy);
+            var res = await _unitOfWorkService.SuperShopService.CreateUpdateUserMenuPermission(menuUserPermissionModel, ActionBy);
             return Ok(res);
 
         }
@@ -119,6 +137,77 @@ namespace SuperShop.Controllers
         {
 
             var res = await _unitOfWorkService.SuperShopService.GetMenuPermissionByUserId(UserId);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetMenuPermissionById")]
+        public async Task<IActionResult> GetMenuPermissionById(long MenuPermissionId)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetMenuPermissionById(MenuPermissionId);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetAllMenuPermission")]
+        public async Task<IActionResult> GetAllMenuPermission([FromQuery]GetDataConfigModel getDataConfigModel)
+        {
+            var res = await _unitOfWorkService.SuperShopService.GetAllMenuPermission(getDataConfigModel);
+            return Ok(res);
+        }
+        [HttpGet]
+        [Route("GetAllMenus")]
+        public async Task<IActionResult> GetAllMenus([FromQuery]GetDataConfigModel getDataConfigModel)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetAllMenus(getDataConfigModel);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetMenuById")]
+        public async Task<IActionResult> GetMenuById(long MenuId)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetMenuById(MenuId);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("DeleteMenuById")]
+        public async Task<IActionResult> DeleteMenuById([FromBody] long MenuId)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var res = await _unitOfWorkService.SuperShopService.DeleteMenuById(MenuId, ActionBy);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetUserType")]
+        public async Task<IActionResult> GetUserType()
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetUserType();
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetMenuDDL")]
+        public async Task<IActionResult> GetMenuDDL()
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetMenuDDL();
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetUserDDL")]
+        public async Task<IActionResult> GetUserDDL()
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetUserDDL();
             return Ok(res);
 
         }

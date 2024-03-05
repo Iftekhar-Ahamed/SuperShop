@@ -1,4 +1,5 @@
-﻿using SuperShop.IRepository;
+﻿using Microsoft.AspNetCore.Mvc;
+using SuperShop.IRepository;
 using SuperShop.IService;
 using SuperShop.Model;
 using System;
@@ -48,6 +49,50 @@ namespace SuperShop.Service
                 msg.StatusCode = 400;
             }
             return KeyValuePair.Create(res,msg);
+        }
+        public async Task<MessageHelperModel> DeleteUserById(long UserId, long ActionBy)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.DeleteUserById(UserId);
+            var msg = new MessageHelperModel();
+            if (res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 1,
+                    ActionBy = ActionBy,
+                    ActionChanges = "User " + UserId.ToString() + " Deleted ",
+                    JsonPayload = JsonSerializer.Serialize(UserId),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Delete"
+                };
+
+                await CreateLog(log);
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to delete";
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        public async Task<KeyValuePair<AllUserInformationViewModel?, MessageHelperModel>> GetUserInformationById(long UserId)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetUserInformationByIdAsync(UserId);
+            var msg = new MessageHelperModel();
+            if (res != null)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Invalid User Id";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
         }
         public async Task<KeyValuePair<PaginationModel?, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel)
         {
@@ -182,18 +227,18 @@ namespace SuperShop.Service
                 };
 
                 await CreateLog(log);
-                msg.Message = "Sucessfully Created";
+                msg.Message = "Sucessfully Updated";
                 msg.StatusCode = 200;
             }
             else
             {
-                msg.Message = "Faild to Created";
+                msg.Message = "Faild to Updated";
                 msg.StatusCode = 400;
             }
             return msg;
 
         }
-        public async Task<MessageHelperModel> UserMenuPermission(MenuUserPermissionModel menuUserPermissionModel, long ActionBy)
+        public async Task<MessageHelperModel> CreateUpdateUserMenuPermission(MenuUserPermissionModel menuUserPermissionModel, long ActionBy)
         {
             string OperationType = "";
             var res = 0;
@@ -310,14 +355,182 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(res,msg);
         }
-        public async Task<KeyValuePair<List<MenuModel>?, MessageHelperModel>> GetMenuPermissionByUserId(long UserId)
+        public async Task<KeyValuePair<List<MenuModel>, MessageHelperModel>> GetMenuPermissionByUserId(long UserId)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuPermissionByUserIdAsync(UserId);
-            msg.Message = "Sucessfull";
-            msg.StatusCode = 200;
+            if (res.Count > 0)
+            {
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
             return KeyValuePair.Create(res,msg);
         }
+        public async Task<KeyValuePair<List<GetAllMenuPermissionModel>, MessageHelperModel>> GetAllMenuPermission(GetDataConfigModel getDataConfigModel)
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenuPermissionAsync(getDataConfigModel);
+            if (res.Count > 0)
+            {
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<KeyValuePair<GetAllMenuPermissionModel, MessageHelperModel>> GetMenuPermissionById(long MenuPermissionId)
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuPermissionByIdAsync(MenuPermissionId);
+            if (res != null)
+            {
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserType()
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetUserTypeAsync();
 
+            List<CommonDDL> commonDDLs = new List<CommonDDL>();
+
+            foreach (var item in res)
+            {
+                commonDDLs.Add(new CommonDDL { Name = item.UserTypeName, Value = item.Id });
+            }
+            msg.Message = "Sucessfull";
+            msg.StatusCode = 200;
+            return KeyValuePair.Create(commonDDLs, msg);
+        }
+        public async Task<KeyValuePair<List<MenuModel>, MessageHelperModel>> GetAllMenus(GetDataConfigModel getDataConfigModel)
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenusAsync(getDataConfigModel);
+            if(res.Count != 0)
+            {
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No Menus Found";
+                msg.StatusCode = 200;
+            }
+            
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<KeyValuePair<MenuModel?, MessageHelperModel>> GetMenuById(long menuId)
+        {
+            var msg = new MessageHelperModel();
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuByIdAsync(menuId);
+            if (res != null)
+            {
+                msg.Message = "Sucessfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Not Menu Found";
+                msg.StatusCode = 400;
+            }
+
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<MessageHelperModel> DeleteMenuById(long MenuId, long ActionBy)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.DeleteMenuById(MenuId);
+            var msg = new MessageHelperModel();
+            if (res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 2,
+                    ActionBy = ActionBy,
+                    ActionChanges = "Menu : " + MenuId.ToString() + " Deleted ",
+                    JsonPayload = JsonSerializer.Serialize(MenuId),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Delete"
+                };
+
+                await CreateLog(log);
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to delete";
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetMenuDDL()
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenusAsync(new GetDataConfigModel{ IsActive=true});
+            var msg = new MessageHelperModel();
+            List<CommonDDL> commonDDLs = new List<CommonDDL>();
+
+            foreach (var item in res)
+            {
+                CommonDDL commonDDL = new CommonDDL();
+                commonDDL.Name = item.MenuName+"["+item.Id.ToString()+"]";
+                commonDDL.Value = item.Id;
+                commonDDLs.Add(commonDDL);
+            }
+
+            if (res.Count != 0)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(commonDDLs, msg);
+        }
+        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserDDL()
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllUserAsync(new GetDataConfigModel { IsActive = true });
+            var msg = new MessageHelperModel();
+            List<CommonDDL> commonDDLs = new List<CommonDDL>();
+
+            foreach (var item in res)
+            {
+                CommonDDL commonDDL = new CommonDDL();
+                commonDDL.Name = item.UserFullName + "[" + item.Id.ToString() + "]";
+                commonDDL.Value = item.Id??0;
+                commonDDLs.Add(commonDDL);
+            }
+
+            if (res.Count != 0)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(commonDDLs, msg);
+        }
     }
 }
