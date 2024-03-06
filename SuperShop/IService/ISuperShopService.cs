@@ -25,7 +25,20 @@ namespace SuperShop.IService
         Task<KeyValuePair<MenuModel?, MessageHelperModel>> GetMenuById(long menuId);
         Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserType();
         Task<MessageHelperModel> DeleteMenuById(long MenuId, long ActionBy);
-        Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetMenuDDL();
+        Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetMenuDDL(long? UserId);
         Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserDDL();
+        Task<MessageHelperModel> DeleteMenuPermissionById(long PermissionId, long ActionBy);
+        Task<MessageHelperModel> CreateItemType(ItemTypeModel itemTypeModel, long ActionBy);
+        Task<MessageHelperModel> UpdateItemType(ItemTypeModel itemTypeModel, long ActionBy);
+        Task<MessageHelperModel> DeleteItemType(long Id, long ActionBy);
+        Task<KeyValuePair<ItemTypeModel, MessageHelperModel>> GetItemTypeById(long Id);
+        Task<KeyValuePair<List<ItemTypeModel>, MessageHelperModel>> GetAllItemType(GetDataConfigModel getDataConfigModel);
+        Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTypeDDL();
+        Task<MessageHelperModel> CreateItem(ItemModel item, long ActionBy);
+        Task<MessageHelperModel> DeleteItemById(long Id, long ActionBy);
+        Task<MessageHelperModel> UpdateItem(ItemModel item, long ActionBy);
+        Task<KeyValuePair<ItemModel, MessageHelperModel>> GetItemById(long Id);
+        Task<KeyValuePair<List<ItemModel>, MessageHelperModel>> GetAllItem(GetDataConfigModel getDataConfigModel);
+        Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemDDL();
     }
 }

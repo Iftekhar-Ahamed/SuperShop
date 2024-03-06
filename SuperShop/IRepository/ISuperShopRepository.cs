@@ -27,5 +27,17 @@ namespace SuperShop.IRepository
         Task<List<MenuModel>> GetAllMenusAsync(GetDataConfigModel getDataConfigModel);
         Task<List<UserTypeModel>> GetUserTypeAsync();
         Task<long> DeleteMenuById(long Id);
+        Task<long> DeleteMenuPermissionByIdAsync(long Id);
+        Task<List<MenuModel>> GetAllMenusForMenuPermissionAsync(GetDataConfigModel getDataConfigModel);
+        Task<long> CreateItemTypeAsync(ItemTypeModel itemTypeModel);
+        Task<long> DeleteItemTypeByIdAsync(long Id);
+        Task<long> UpdateItemTypeAsync(ItemTypeModel itemTypeModel);
+        Task<List<ItemTypeModel>> GetAllItemTypeAsync(GetDataConfigModel getDataConfigModel);
+        Task<ItemTypeModel> GetItemTypeByIdAsync(long Id);
+        Task<long> CreateItemAsync(ItemModel  item);
+        Task<long> DeleteItemByIdAsync(long Id);
+        Task<long> UpdateItemAsync(ItemModel itemModel);
+        Task<List<ItemModel>> GetAllItemAsync(GetDataConfigModel getDataConfigModel);
+        Task<ItemModel> GetItemByIdAsync(long Id);
     }
 }

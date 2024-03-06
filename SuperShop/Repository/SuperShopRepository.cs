@@ -440,7 +440,7 @@ namespace SuperShop.Repository
                             m.IsActive = 1 
                             and u.IsActive = 1
                             and (ISNULL(@IsActive,1) = 1 or @IsActive = mp.IsActive)
-                            and (u.Id = @NumSearchTerm or m.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%')";
+                            and (u.Id = @NumSearchTerm or m.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%' or m.MenuName LIKE '%' + @SearchTerm + '%')";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
@@ -512,6 +512,41 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<List<MenuModel>> GetAllMenusForMenuPermissionAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                string sql = string.Empty;
+                if (getDataConfigModel.NumSearchTerm != 0)
+                {
+                    sql = @"SELECT * FROM [dbo].[Menu] m
+                            LEFT JOIN  (SELECT * FROM [dbo].[UserMenuPermission] WHERE UserId = @NumSearchTerm) mp ON mp.MenuId = m.Id
+                            WHERE ISNULL(mp.UserId,0)=0
+                            and (ISNULL(@IsActive,1) = 1 or @IsActive = m.IsActive)";
+                }
+                else
+                {
+                    sql = @"SELECT * FROM [dbo].[Menu]
+                            WHERE 
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = IsActive)";
+                }
+
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<MenuModel>(sql, getDataConfigModel);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<List<UserTypeModel>> GetUserTypeAsync()
         {
             try
@@ -543,6 +578,243 @@ namespace SuperShop.Repository
                     connection.Open();
                     var result = await connection.ExecuteAsync(sql, new { Id });
                     return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> DeleteMenuPermissionByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"DELETE FROM [dbo].[UserMenuPermission] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, new { Id });
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> CreateItemTypeAsync( ItemTypeModel itemTypeModel)
+        {
+            try
+            {
+                var sql = @"INSERT INTO [dbo].[ItemType]
+                           ([ItemTypeName]
+                           ,[UOM]
+                           ,[IsActive])
+                     VALUES
+                           (@ItemTypeName
+                           ,@UOM
+                           ,@IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql,itemTypeModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> DeleteItemTypeByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"DELETE [dbo].[ItemType] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, new { Id});
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> UpdateItemTypeAsync(ItemTypeModel itemTypeModel)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[ItemType]
+                           SET [ItemTypeName] = @ItemTypeName
+                              ,[UOM] = @UOM
+                              ,[IsActive] = @IsActive
+                        WHERE @Id = Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, itemTypeModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<ItemTypeModel>> GetAllItemTypeAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                var sql = @"SELECT * FROM [dbo].[ItemType] 
+                            WHERE 
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = IsActive)
+                                and (Id = @NumSearchTerm or ItemTypeName LIKE '%' + @SearchTerm + '%')";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTypeModel>(sql,getDataConfigModel);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<ItemTypeModel> GetItemTypeByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM [dbo].[ItemType] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTypeModel>(sql,new { Id});
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+
+
+
+        public async Task<long> CreateItemAsync(ItemModel  item)
+        {
+            try
+            {
+                var sql = @"INSERT INTO [dbo].[Item]
+                           ([ItemName]
+                           ,[ItemTypeId]
+                           ,[UnitPriceSell]
+                           ,[UnitPricePurchase]
+                           ,[StockQuantity]
+                           ,[IsActive])
+                     VALUES
+                           (@ItemName
+                           ,@ItemTypeId
+                           ,@UnitPriceSell
+                           ,@UnitPricePurchase
+                           ,@StockQuantity
+                           ,@IsActive)";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, item);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> DeleteItemByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"DELETE [dbo].[Item] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, new { Id });
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<long> UpdateItemAsync(ItemModel item)
+        {
+            try
+            {
+                var sql = @"UPDATE [dbo].[Item]
+                       SET [ItemName] = @ItemName
+                          ,[ItemTypeId] = @ItemTypeId
+                          ,[UnitPriceSell] = @UnitPriceSell
+                          ,[UnitPricePurchase] = @UnitPricePurchase
+                          ,[StockQuantity] = @StockQuantity
+                          ,[IsActive] = @IsActive
+                     WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, item);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<ItemModel>> GetAllItemAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                var sql = @"SELECT * FROM [dbo].[Item]
+                            WHERE 
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = IsActive)
+                                and (Id = @NumSearchTerm or ItemName LIKE '%' + @SearchTerm + '%')";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemModel>(sql, getDataConfigModel);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<ItemModel> GetItemByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM [dbo].[Item] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemModel>(sql, new { Id });
+                    return result.FirstOrDefault();
                 }
             }
             catch (Exception ex)
