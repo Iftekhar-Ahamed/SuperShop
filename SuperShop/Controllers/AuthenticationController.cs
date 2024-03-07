@@ -39,7 +39,7 @@ namespace SuperShop.Controllers
                     Id = long.Parse(userIdClaim.Value),
                     UserFullName = userFullNameClaim.Value
                 };
-
+                var msg = new MessageHelperModel();
                 var res = await _unitOfWorkService.AuthenticationService.GetNewAccessToken(UserModel);
 
                 return Ok(res);

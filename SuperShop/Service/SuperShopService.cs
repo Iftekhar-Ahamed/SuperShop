@@ -856,5 +856,94 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(commonDDLs, msg);
         }
+        public async Task<MessageHelperModel> DeleteItemTransactionTypeById(long Id, long ActionBy)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.DeleteItemTransactionTypeByIdAsync(Id);
+            var msg = new MessageHelperModel();
+
+            if (res != 0)
+            {
+                var log = new LogModel
+                {
+                    TableId = 3,
+                    ActionBy = ActionBy,
+                    ActionChanges = "Item Transaction Type" + Id.ToString() + "  Deleted",
+                    JsonPayload = JsonSerializer.Serialize(Id),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = "Delete"
+                };
+                await CreateLog(log);
+                msg.Message = "Successfully Deleted";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "Faild to Deleted";
+                msg.StatusCode = 400;
+            }
+            return msg;
+        }
+        
+        public async Task<KeyValuePair<ItemTransactionTypeModel, MessageHelperModel>> GetItemTransactionTypeById(long Id)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetItemTransactionTypeByIdAsync(Id);
+            var msg = new MessageHelperModel();
+
+            if (res != null)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<KeyValuePair<List<ItemTransactionTypeModel>, MessageHelperModel>> GetAllItemTransactionType(GetDataConfigModel getDataConfigModel)
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync(getDataConfigModel);
+            var msg = new MessageHelperModel();
+
+            if (res != null)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(res, msg);
+        }
+        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTransactionTypeDDL()
+        {
+            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync(new GetDataConfigModel { IsActive = true });
+            var msg = new MessageHelperModel();
+            List<CommonDDL> commonDDLs = new List<CommonDDL>();
+
+            foreach (var item in res)
+            {
+                CommonDDL commonDDL = new CommonDDL();
+                commonDDL.Name = item.TransactionName;
+                commonDDL.Value = item.Id;
+                commonDDLs.Add(commonDDL);
+            }
+
+            if (res.Count != 0)
+            {
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
+            }
+            else
+            {
+                msg.Message = "No data found";
+                msg.StatusCode = 400;
+            }
+            return KeyValuePair.Create(commonDDLs, msg);
+        }
     }
 }

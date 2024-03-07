@@ -809,11 +809,75 @@ namespace SuperShop.Repository
         {
             try
             {
-                var sql = @"SELECT * FROM [dbo].[Item] WHERE Id = @Id";
+                var sql = @"SELECT item.Id as Id,item.ItemName, item.ItemTypeId, t.ItemTypeName, t.UOM, item.StockQuantity,item.UnitPricePurchase,item.UnitPriceSell, item.IsActive
+                            FROM [dbo].[Item] item
+                            JOIN [dbo].[ItemType] t ON item.ItemTypeId = t.id
+                            WHERE item.Id = @Id and t.IsActive = 1";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<ItemModel>(sql, new { Id });
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public async Task<long> DeleteItemTransactionTypeByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"DELETE [dbo].[ItemTransactionType] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync(sql, new { Id });
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        public async Task<List<ItemTransactionTypeModel>> GetAllItemTransactionTypeAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                var sql = @"SELECT * FROM [dbo].[ItemTransactionType]
+                            WHERE 
+                                (@IsActive IS NULL or @IsActive = IsActive)
+                                and (Id = @NumSearchTerm or TransactionName LIKE '%' + @SearchTerm + '%')";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql, getDataConfigModel);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<ItemTransactionTypeModel> GetItemTransactionTypeByIdAsync(long Id)
+        {
+            try
+            {
+                var sql = @"SELECT * FROM [dbo].[ItemTransactionType] WHERE Id = @Id";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql, new { Id });
                     return result.FirstOrDefault();
                 }
             }

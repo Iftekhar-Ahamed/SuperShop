@@ -39,5 +39,8 @@ namespace SuperShop.IRepository
         Task<long> UpdateItemAsync(ItemModel itemModel);
         Task<List<ItemModel>> GetAllItemAsync(GetDataConfigModel getDataConfigModel);
         Task<ItemModel> GetItemByIdAsync(long Id);
+        Task<long> DeleteItemTransactionTypeByIdAsync(long Id);
+        Task<List<ItemTransactionTypeModel>> GetAllItemTransactionTypeAsync(GetDataConfigModel getDataConfigModel);
+        Task<ItemTransactionTypeModel> GetItemTransactionTypeByIdAsync(long Id);
     }
 }

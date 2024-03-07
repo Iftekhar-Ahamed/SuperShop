@@ -330,5 +330,41 @@ namespace SuperShop.Controllers
             return Ok(res);
 
         }
+        [HttpGet]
+        [Route("GetItemTransactionTypeDDL")]
+        public async Task<IActionResult> GetItemTransactionTypeDDL()
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetItemTransactionTypeDDL();
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetAllItemTransactionType")]
+        public async Task<IActionResult> GetAllItemTransactionType([FromQuery] GetDataConfigModel getDataConfigModel)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetAllItemTransactionType(getDataConfigModel);
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetItemTransactionTypeById")]
+        public async Task<IActionResult> GetItemTransactionTypeById(long Id)
+        {
+
+            var res = await _unitOfWorkService.SuperShopService.GetItemTransactionTypeById(Id);
+            return Ok(res);
+
+        }
+        [HttpPost]
+        [Route("DeleteItemTransactionType")]
+        public async Task<IActionResult> DeleteItemTransactionType([FromBody] long Id)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var res = await _unitOfWorkService.SuperShopService.DeleteItemTransactionTypeById(Id, ActionBy);
+            return Ok(res);
+
+        }
     }
 }
