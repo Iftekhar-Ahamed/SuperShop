@@ -19,5 +19,6 @@ namespace SuperShop.Model
         public int? PartNo { get; set; }
         public bool IsActive { get; set; }
         public DateTime DateTimeAction { get; set; }
+        public String ItemName { get; set; } = String.Empty;
     }
 }

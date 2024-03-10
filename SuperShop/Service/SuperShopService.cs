@@ -968,15 +968,20 @@ namespace SuperShop.Service
             {
                 var log = new LogModel
                 {
-                    TableId = 3,
+                    TableId = 2002,
                     ActionBy = ActionBy,
-                    ActionChanges = ActionBy.ToString() + " " + operation + " " + itemTransactionModel.ItemId,
+                    ActionChanges = ActionBy.ToString() + " " + operation + " "+itemTransactionModel.ItemName+"[" + itemTransactionModel.ItemId+"]",
                     JsonPayload = JsonSerializer.Serialize(itemTransactionModel),
                     ActionDate = DateTime.Now,
                     IsActive = true,
                     ActionType = operation
                 };
                 await CreateLog(log);
+
+                if(operation== "Purchase")
+                {
+                    await _unitOfWorkService.NotificationService.SendNotificationToAll(itemTransactionModel.ItemName + "[" + itemTransactionModel.ItemId + "] Stock Updated");
+                }
             }
 
 
