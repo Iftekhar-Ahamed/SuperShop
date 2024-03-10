@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperShop.IService;
 using SuperShop.Model;
@@ -6,7 +7,8 @@ using System.Security.Claims;
 
 namespace SuperShop.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("[controller]")]
     [ApiController]
     public class ItemController : ControllerBase
     {
@@ -188,6 +190,17 @@ namespace SuperShop.Controllers
             var res = await _unitOfWorkService.SuperShopService.DeleteItemTransactionTypeById(Id, ActionBy);
             return Ok(res);
 
-        }   
+        }
+        
+        [HttpPost]
+        [Route("MakeTransaction")]
+        public async Task<IActionResult> MakeTransaction(ItemTransactionModel itemTransactionModel)
+        {
+            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            var res = await _unitOfWorkService.SuperShopService.MakeTransaction(itemTransactionModel, ActionBy);
+            return Ok(res);
+
+        }
     }
 }

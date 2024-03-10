@@ -945,5 +945,42 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(commonDDLs, msg);
         }
+        public async Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, long ActionBy)
+        {
+            string operation = string.Empty;
+            if(itemTransactionModel.TransactionTypeId == 1)
+            {
+                itemTransactionModel.UnitPrice = itemTransactionModel.unitPriceSell;
+                operation = "Sell";
+            }
+            else
+            {
+                itemTransactionModel.UnitPrice = itemTransactionModel.unitPricePurchase;
+                operation = "Purchase";
+            }
+            itemTransactionModel.DateTimeAction = DateTime.Now;
+            itemTransactionModel.IsActive = true;
+            itemTransactionModel.Total = itemTransactionModel.UnitPrice * itemTransactionModel.UnitOfAmount;
+
+            var res = await _unitOfWorkRepository.SuperShopRepository.MakeItemTransactionAsync(itemTransactionModel);
+
+            if (res.StatusCode == 200)
+            {
+                var log = new LogModel
+                {
+                    TableId = 3,
+                    ActionBy = ActionBy,
+                    ActionChanges = ActionBy.ToString() + " " + operation + " " + itemTransactionModel.ItemId,
+                    JsonPayload = JsonSerializer.Serialize(itemTransactionModel),
+                    ActionDate = DateTime.Now,
+                    IsActive = true,
+                    ActionType = operation
+                };
+                await CreateLog(log);
+            }
+
+
+            return res;
+        }
     }
 }

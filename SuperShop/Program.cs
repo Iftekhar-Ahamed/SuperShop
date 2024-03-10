@@ -30,7 +30,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
-        builder => builder.WithOrigins("*")
+        builder => builder.WithOrigins("http://localhost:4200")
+        .AllowCredentials()
         .AllowAnyMethod()
         .AllowAnyHeader());
 });
@@ -43,13 +44,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("AllowOrigin");
-app.MapHub<NotificationHub>("/notificationHub");
+
 
 app.UseHttpsRedirection();
 app.UseCustomAuthorization();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapControllers();
 
 app.Run();

@@ -44,5 +44,6 @@ namespace SuperShop.IService
         Task<KeyValuePair<ItemTransactionTypeModel, MessageHelperModel>> GetItemTransactionTypeById(long Id);
         Task<KeyValuePair<List<ItemTransactionTypeModel>, MessageHelperModel>> GetAllItemTransactionType(GetDataConfigModel getDataConfigModel);
         Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTransactionTypeDDL();
+        Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, long ActionBy);
     }
 }

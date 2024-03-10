@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperShop.IService;
 using SuperShop.Model;
@@ -6,7 +7,8 @@ using System.Security.Claims;
 
 namespace SuperShop.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("[controller]")]
     [ApiController]
     public class MenuController : ControllerBase
     {

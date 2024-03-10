@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using SuperShop.IRepository;
 using SuperShop.Model;
+using System.Data;
 
 namespace SuperShop.Repository
 {
@@ -879,6 +880,33 @@ namespace SuperShop.Repository
                     connection.Open();
                     var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql, new { Id });
                     return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<MessageHelperModel> MakeItemTransactionAsync(ItemTransactionModel itemTransactionModel)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var parameters = new
+                    {
+                        @ItemId = itemTransactionModel.ItemId,
+                        @TransactionTypeId = itemTransactionModel.TransactionTypeId,
+                        @UnitOfAmount = itemTransactionModel.UnitOfAmount,
+                        @UnitPrice = itemTransactionModel.UnitPrice,
+                        @Total = itemTransactionModel.Total,
+                        @partNo = itemTransactionModel.TransactionTypeId,
+                        @DateTimeAction = itemTransactionModel.DateTimeAction
+                    };
+                    var multiResult = await connection.QueryFirstOrDefaultAsync<MessageHelperModel>("dbo.TransactionItem", parameters, commandType: CommandType.StoredProcedure);
+                    return multiResult;
+                    
                 }
             }
             catch (Exception ex)
