@@ -11,7 +11,6 @@ namespace SuperShop.IService
         Task<KeyValuePair<AllUserInformationViewModel?, MessageHelperModel>> GetUserInformationById(long UserId);
         Task<KeyValuePair<PaginationModel?, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel);
         Task<MessageHelperModel> UpdateUserById(UserModel userModel, long ActionBy);
-        Task<MessageHelperModel> CreateLog(LogModel logModel);
         Task<MessageHelperModel> CreateMenu(MenuModel menuModel, long ActionBy);
         Task<MessageHelperModel> UpdateMenu(MenuModel menuModel, long ActionBy);
         Task<MessageHelperModel> CreateUpdateUserMenuPermission(MenuUserPermissionModel menuUserPermissionModel, long ActionBy);
@@ -44,6 +43,6 @@ namespace SuperShop.IService
         Task<KeyValuePair<ItemTransactionTypeModel, MessageHelperModel>> GetItemTransactionTypeById(long Id);
         Task<KeyValuePair<List<ItemTransactionTypeModel>, MessageHelperModel>> GetAllItemTransactionType(GetDataConfigModel getDataConfigModel);
         Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTransactionTypeDDL();
-        Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, long ActionBy);
+        Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, UserModel ActionBy);
     }
 }

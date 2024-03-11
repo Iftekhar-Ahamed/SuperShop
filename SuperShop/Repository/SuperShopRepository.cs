@@ -24,7 +24,7 @@ namespace SuperShop.Repository
                            ,[UserName]
                            ,[Password]
                            ,[UserFullName]
-                           ,[IsActive])
+                           ,[IsActive]) OUTPUT INSERTED.Id
                             VALUES
                            (@UserTypeId
                            ,@UserName
@@ -34,7 +34,8 @@ namespace SuperShop.Repository
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql, userModel);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql, userModel);
+                    
                     return result;
                 }
             }
@@ -171,38 +172,6 @@ namespace SuperShop.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<long> CreateLogAsync(LogModel logModel)
-        {
-            try
-            {
-                var sql = @"INSERT INTO [dbo].[Log]
-                           ([TableId]
-                           ,[ActionBy]
-                           ,[ActionDate]
-                           ,[ActionChanges]
-                           ,[JsonPayload]
-                           ,[IsActive]
-                           ,[ActionType])
-                           VALUES
-                           (@TableId
-                           ,@ActionBy
-                           ,@ActionDate
-                           ,@ActionChanges
-                           ,@JsonPayload
-                           ,@IsActive
-                           ,@ActionType)";
-                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    connection.Open();
-                    var result = await connection.ExecuteAsync(sql, logModel);
-                    return result;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
 
         public async Task<long> SaveUserConnectionIdAsync(string ConnectionId, long UserId)
         {
@@ -247,7 +216,7 @@ namespace SuperShop.Repository
                 var sql = @"INSERT INTO [dbo].[Menu]
                            ([MenuName]
                            ,[MenuUrl]
-                           ,[IsActive])
+                           ,[IsActive]) OUTPUT INSERTED.Id
                             VALUES
                            (@MenuName
                            ,@MenuUrl
@@ -255,7 +224,7 @@ namespace SuperShop.Repository
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql, menuModel);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql, menuModel);
                     return result;
                 }
             }
@@ -292,7 +261,7 @@ namespace SuperShop.Repository
                 var sql = @"INSERT INTO [dbo].[UserMenuPermission]
                            ([MenuId]
                            ,[UserId]
-                           ,[IsActive])
+                           ,[IsActive])OUTPUT INSERTED.Id
                             VALUES
                            (@MenuId
                            ,@UserId
@@ -300,7 +269,7 @@ namespace SuperShop.Repository
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql, obj);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql, obj);
                     return result;
                 }
             }
@@ -337,13 +306,15 @@ namespace SuperShop.Repository
                 var sql = @"INSERT INTO [dbo].[ItemTransactionType]
                            ([TransactionName]
                            ,[IsActive])
+                            OUTPUT INSERTED.Id
                             VALUES
                            (@TransactionName
                            ,@IsActive)";
+                        
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql, obj);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql, obj);
                     return result;
                 }
             }
@@ -611,6 +582,7 @@ namespace SuperShop.Repository
                            ([ItemTypeName]
                            ,[UOM]
                            ,[IsActive])
+                     OUTPUT INSERTED.Id
                      VALUES
                            (@ItemTypeName
                            ,@UOM
@@ -618,7 +590,7 @@ namespace SuperShop.Repository
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql,itemTypeModel);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql,itemTypeModel);
                     return result;
                 }
             }
@@ -721,7 +693,7 @@ namespace SuperShop.Repository
                            ,[UnitPriceSell]
                            ,[UnitPricePurchase]
                            ,[StockQuantity]
-                           ,[IsActive])
+                           ,[IsActive]) OUTPUT INSERTED.Id
                      VALUES
                            (@ItemName
                            ,@ItemTypeId
@@ -732,7 +704,7 @@ namespace SuperShop.Repository
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-                    var result = await connection.ExecuteAsync(sql, item);
+                    var result = await connection.QuerySingleOrDefaultAsync<int>(sql, item);
                     return result;
                 }
             }
@@ -790,10 +762,12 @@ namespace SuperShop.Repository
                 long.TryParse(getDataConfigModel.SearchTerm, out t);
                 getDataConfigModel.NumSearchTerm = t;
 
-                var sql = @"SELECT * FROM [dbo].[Item]
+                var sql = @"SELECT item.Id as Id,item.ItemName, item.ItemTypeId, t.ItemTypeName, t.UOM, item.StockQuantity,item.UnitPricePurchase,item.UnitPriceSell, item.IsActive
+                            FROM [dbo].[Item] item
+                            JOIN [dbo].[ItemType] t ON item.ItemTypeId = t.id
                             WHERE 
-                                (ISNULL(@IsActive,1) = 1 or @IsActive = IsActive)
-                                and (Id = @NumSearchTerm or ItemName LIKE '%' + @SearchTerm + '%')";
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = item.IsActive)
+                                and (item.Id = @NumSearchTerm or item.ItemName LIKE '%' + @SearchTerm + '%')";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
@@ -813,7 +787,7 @@ namespace SuperShop.Repository
                 var sql = @"SELECT item.Id as Id,item.ItemName, item.ItemTypeId, t.ItemTypeName, t.UOM, item.StockQuantity,item.UnitPricePurchase,item.UnitPriceSell, item.IsActive
                             FROM [dbo].[Item] item
                             JOIN [dbo].[ItemType] t ON item.ItemTypeId = t.id
-                            WHERE item.Id = @Id and t.IsActive = 1";
+                            WHERE item.Id = @Id ";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();

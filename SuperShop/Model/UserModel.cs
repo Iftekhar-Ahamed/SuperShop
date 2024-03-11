@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace SuperShop.Model
 {
@@ -20,5 +22,19 @@ namespace SuperShop.Model
         [Required]
         [StringLength(50)]
         public string? Password { get; set; }
+
+        public UserModel() { }
+        public UserModel(ClaimsPrincipal User)
+        {
+            try
+            {
+                this.Id = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                this.UserFullName = User.FindFirstValue(ClaimTypes.Name);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

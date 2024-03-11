@@ -4,5 +4,6 @@
     {
         ISuperShopRepository SuperShopRepository { get; }
         IAuthenticationRepository AuthenticationRepository { get; }
+        ILogRepository LogRepository { get; }
     }
 }

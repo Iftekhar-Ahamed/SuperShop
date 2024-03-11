@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using SuperShop;
 using SuperShop.Notification;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +39,21 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+app.UseExceptionHandler(options => {
+    options.Run(
+        async context =>
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            var ex = context.Features.Get<IExceptionHandlerFeature>();
+            if (ex != null)
+            {
+                await context.Response.WriteAsync(ex.Error.Message);
+            }
+        });
+});
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

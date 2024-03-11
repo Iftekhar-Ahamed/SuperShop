@@ -18,7 +18,7 @@ namespace SuperShop.Service
 
         ISuperShopService IUnitOfWorkService.SuperShopService =>  new SuperShopService(_unitOfWorkRepository,this);
         IAuthenticationService IUnitOfWorkService.AuthenticationService =>  new AuthenticationService(_unitOfWorkRepository,_configuration);
-        ILogService IUnitOfWorkService.LogService => new LogService();
+        ILogService IUnitOfWorkService.LogService => new LogService(_unitOfWorkRepository);
         INotificationService IUnitOfWorkService.NotificationService => new NotificationService(_hubContext);
     }
 }

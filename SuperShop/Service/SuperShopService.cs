@@ -17,22 +17,7 @@ namespace SuperShop.Service
             _unitOfWorkService = unitOfWorkService;
         }
 
-        public async Task<MessageHelperModel> CreateLog(LogModel logModel)
-        {
-            var res = await _unitOfWorkRepository.SuperShopRepository.CreateLogAsync(logModel);
-            var msg = new MessageHelperModel();
-            if (res != 0)
-            {
-                msg.Message = "Successfully Log Created";
-                msg.StatusCode = 200;
-            }
-            else
-            {
-                msg.Message = "Faild Log Created";
-                msg.StatusCode = 400;
-            }
-            return msg;
-        }
+        
         public async Task<KeyValuePair<UserModel?, MessageHelperModel>> GetUserById(long UserId)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetUserByIdAsync(UserId);
@@ -59,6 +44,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 1,
+                    TablePk = UserId,
                     ActionBy = ActionBy,
                     ActionChanges = "User " + UserId.ToString() + " Deleted ",
                     JsonPayload = JsonSerializer.Serialize(UserId),
@@ -67,7 +53,7 @@ namespace SuperShop.Service
                     ActionType = "Delete"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -94,9 +80,9 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(res, msg);
         }
-        public async Task<KeyValuePair<PaginationModel?, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel)
+        public async Task<KeyValuePair<PaginationModel, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel)
         {
-            var res = new PaginationModel();
+            PaginationModel res = new PaginationModel();
             res.data = await _unitOfWorkRepository.SuperShopRepository.GetAllUserAsync(getDataConfigModel);
             var msg = new MessageHelperModel();
             if (res.data != null)
@@ -121,6 +107,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 1,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "New User " + userModel.UserName + " Created ",
                     JsonPayload = JsonSerializer.Serialize(userModel),
@@ -129,7 +116,7 @@ namespace SuperShop.Service
                     ActionType = "Create"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
 
                 msg.Message = "Sucessfully Created";
                 msg.StatusCode = 200;
@@ -155,6 +142,7 @@ namespace SuperShop.Service
                     var log = new LogModel
                     {
                         TableId = 1,
+                        TablePk = userModel.Id??0,
                         ActionBy = ActionBy,
                         ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,userModel),
                         JsonPayload = JsonSerializer.Serialize(userModel),
@@ -163,7 +151,7 @@ namespace SuperShop.Service
                         ActionType = "Update"
                     };
 
-                    await CreateLog(log);
+                    await _unitOfWorkService.LogService.CreateLog(log);
 
                     msg.Message = "Sucessfully Update";
                     msg.StatusCode = 200;
@@ -189,6 +177,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "New Menu " + menuModel.MenuName + " Created ",
                     JsonPayload = JsonSerializer.Serialize(menuModel),
@@ -197,7 +186,7 @@ namespace SuperShop.Service
                     ActionType = "Create"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Sucessfully Created";
                 msg.StatusCode = 200;
             }
@@ -218,6 +207,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2,
+                    TablePk = menuModel.Id,
                     ActionBy = ActionBy,
                     ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,menuModel),
                     JsonPayload = JsonSerializer.Serialize(menuModel),
@@ -226,7 +216,7 @@ namespace SuperShop.Service
                     ActionType = "Updated"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Sucessfully Updated";
                 msg.StatusCode = 200;
             }
@@ -247,6 +237,7 @@ namespace SuperShop.Service
             {
                 OperationType = "Update";
                 res = await _unitOfWorkRepository.SuperShopRepository.UpdateUserMenuPermissionAsync(menuUserPermissionModel);
+                if(res!=0)res = menuUserPermissionModel.Id;
             }
             else
             {
@@ -262,6 +253,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "User : " + menuUserPermissionModel.UserId.ToString() + (menuUserPermissionModel.IsActive==true?" Get":" Lost")+" menu :" + menuUserPermissionModel.MenuId + " Permission",
                     JsonPayload = JsonSerializer.Serialize(menuUserPermissionModel),
@@ -270,7 +262,7 @@ namespace SuperShop.Service
                     ActionType = OperationType
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Sucessfully "+OperationType;
                 msg.StatusCode = 200;
             }
@@ -290,6 +282,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 3,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "New Item Transaction Type Added: "+itemTransactionTypeModel.TransactionName,
                     JsonPayload = JsonSerializer.Serialize(itemTransactionTypeModel),
@@ -298,7 +291,7 @@ namespace SuperShop.Service
                     ActionType = "Create"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Sucessfully Created";
                 msg.StatusCode = 200;
             }
@@ -320,6 +313,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 3,
+                    TablePk = itemTransactionTypeModel.Id,
                     ActionBy = ActionBy,
                     ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,itemTransactionTypeModel),
                     JsonPayload = JsonSerializer.Serialize(itemTransactionTypeModel),
@@ -328,7 +322,7 @@ namespace SuperShop.Service
                     ActionType = "Update"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Sucessfully Updated";
                 msg.StatusCode = 200;
             }
@@ -461,6 +455,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2,
+                    TablePk = MenuId,
                     ActionBy = ActionBy,
                     ActionChanges = "Menu : " + MenuId.ToString() + " Deleted ",
                     JsonPayload = JsonSerializer.Serialize(MenuId),
@@ -469,7 +464,7 @@ namespace SuperShop.Service
                     ActionType = "Delete"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -489,6 +484,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2,
+                    TablePk=PermissionId,
                     ActionBy = ActionBy,
                     ActionChanges = "Menu Permission : " + PermissionId.ToString() + " Deleted ",
                     JsonPayload = JsonSerializer.Serialize(PermissionId),
@@ -497,7 +493,7 @@ namespace SuperShop.Service
                     ActionType = "Delete"
                 };
 
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -570,6 +566,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10002,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "New " + itemTypeModel.ItemTypeName.ToString() + " Item Type Created",
                     JsonPayload = JsonSerializer.Serialize(itemTypeModel),
@@ -577,7 +574,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Create"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Created";
                 msg.StatusCode = 200;
             }
@@ -598,6 +595,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10002,
+                    TablePk = Id,
                     ActionBy = ActionBy,
                     ActionChanges = "Item Type " + Id.ToString() + "  Deleted",
                     JsonPayload = JsonSerializer.Serialize(Id),
@@ -605,7 +603,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Delete"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Deleted";
                 msg.StatusCode = 200;
             }
@@ -627,6 +625,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10002,
+                    TablePk = itemTypeModel.Id,
                     ActionBy = ActionBy,
                     ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous,itemTypeModel),
                     JsonPayload = JsonSerializer.Serialize(itemTypeModel),
@@ -634,7 +633,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Update"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Updated";
                 msg.StatusCode = 200;
             }
@@ -720,6 +719,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10003,
+                    TablePk = res,
                     ActionBy = ActionBy,
                     ActionChanges = "New " + item.ItemName.ToString() + " Item Created",
                     JsonPayload = JsonSerializer.Serialize(item),
@@ -727,7 +727,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Create"
                 };
-                var r =  _unitOfWorkService.SuperShopService.CreateLog(log);
+                var r = _unitOfWorkService.LogService.CreateLog(log);
 
                 msg.Message = "Successfully Created";
                 msg.StatusCode = 200;
@@ -749,6 +749,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10003,
+                    TablePk = Id,
                     ActionBy = ActionBy,
                     ActionChanges = "Item " + Id.ToString() + "  Deleted",
                     JsonPayload = JsonSerializer.Serialize(Id),
@@ -756,7 +757,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Delete"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Deleted";
                 msg.StatusCode = 200;
             }
@@ -769,8 +770,8 @@ namespace SuperShop.Service
         }
         public async Task<MessageHelperModel> UpdateItem(ItemModel item, long ActionBy)
         {
-            var res = await _unitOfWorkRepository.SuperShopRepository.UpdateItemAsync(item);
             var previous = await _unitOfWorkRepository.SuperShopRepository.GetItemByIdAsync(item.Id);
+            var res = await _unitOfWorkRepository.SuperShopRepository.UpdateItemAsync(item);
             var msg = new MessageHelperModel();
 
             if (res != 0)
@@ -778,6 +779,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 10003,
+                    TablePk = item.Id,
                     ActionBy = ActionBy,
                     ActionChanges = _unitOfWorkService.LogService.UpdateDifference(previous, item),
                     JsonPayload = JsonSerializer.Serialize(item),
@@ -785,7 +787,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Update"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Updated";
                 msg.StatusCode = 200;
             }
@@ -866,6 +868,7 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 3,
+                    TablePk = Id,
                     ActionBy = ActionBy,
                     ActionChanges = "Item Transaction Type" + Id.ToString() + "  Deleted",
                     JsonPayload = JsonSerializer.Serialize(Id),
@@ -873,7 +876,7 @@ namespace SuperShop.Service
                     IsActive = true,
                     ActionType = "Delete"
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
                 msg.Message = "Successfully Deleted";
                 msg.StatusCode = 200;
             }
@@ -945,7 +948,7 @@ namespace SuperShop.Service
             }
             return KeyValuePair.Create(commonDDLs, msg);
         }
-        public async Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, long ActionBy)
+        public async Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, UserModel ActionBy)
         {
             string operation = string.Empty;
             if(itemTransactionModel.TransactionTypeId == 1)
@@ -969,14 +972,15 @@ namespace SuperShop.Service
                 var log = new LogModel
                 {
                     TableId = 2002,
-                    ActionBy = ActionBy,
-                    ActionChanges = ActionBy.ToString() + " " + operation + " "+itemTransactionModel.ItemName+"[" + itemTransactionModel.ItemId+"]",
+                    ActionBy = ActionBy.Id ?? 0,
+                    ActionChanges = ActionBy.UserFullName + "[" + ActionBy.Id.ToString() + "] " + operation + " " + itemTransactionModel.UnitOfAmount + " " + itemTransactionModel.ItemName + "[" + itemTransactionModel.ItemId + "]",
+                    TablePk = res.Id,
                     JsonPayload = JsonSerializer.Serialize(itemTransactionModel),
                     ActionDate = DateTime.Now,
                     IsActive = true,
                     ActionType = operation
                 };
-                await CreateLog(log);
+                await _unitOfWorkService.LogService.CreateLog(log);
 
                 if(operation== "Purchase")
                 {

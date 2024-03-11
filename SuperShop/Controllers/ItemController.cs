@@ -196,9 +196,10 @@ namespace SuperShop.Controllers
         [Route("MakeTransaction")]
         public async Task<IActionResult> MakeTransaction(ItemTransactionModel itemTransactionModel)
         {
-            var ActionBy = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            UserModel ActionBy = new UserModel(User);
             
             var res = await _unitOfWorkService.SuperShopService.MakeTransaction(itemTransactionModel, ActionBy);
+
             return Ok(res);
 
         }

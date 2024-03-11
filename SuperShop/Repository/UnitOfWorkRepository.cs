@@ -12,5 +12,6 @@ namespace SuperShop.Repository
         ISuperShopRepository IUnitOfWorkRepository.SuperShopRepository => new SuperShopRepository(_configuration);
 
         IAuthenticationRepository IUnitOfWorkRepository.AuthenticationRepository => new AuthenticationRepository(_configuration);
+        ILogRepository IUnitOfWorkRepository.LogRepository => new LogRepository(_configuration);
     }
 }
