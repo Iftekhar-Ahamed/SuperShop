@@ -384,7 +384,7 @@ namespace SuperShop.Repository
             {
                 var sql = @"SELECT * FROM [dbo].[UserMenuPermission] mp
                             JOIN [dbo].[Menu] m ON m.Id = mp.MenuId
-                            WHERE mp.UserId = @UserId and mp.IsActive = 1 and m.IsActive = 1";
+                            WHERE mp.UserId = @UserId and mp.IsActive = 1 and m.IsActive = 1 ORDER BY PriorityMenu";
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
