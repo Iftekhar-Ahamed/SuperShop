@@ -42,6 +42,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -66,10 +67,11 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
-        public async Task<UserModel?> GetUserByIdAsync(long Id)
+        public async Task<UserModel> GetUserByIdAsync(long Id)
         {
             try
             {
@@ -78,15 +80,16 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<UserModel>(sql, new { Id});
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new UserModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
-        public async Task<AllUserInformationViewModel?> GetUserInformationByIdAsync(long Id)
+        public async Task<AllUserInformationViewModel> GetUserInformationByIdAsync(long Id)
         {
             try
             {
@@ -106,11 +109,12 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<AllUserInformationViewModel>(sql, new { Id });
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new AllUserInformationViewModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -128,6 +132,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -170,6 +175,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -188,6 +194,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -206,6 +213,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -231,6 +239,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -252,6 +261,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -276,6 +286,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -297,6 +308,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -321,6 +333,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -341,6 +354,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -358,6 +372,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -375,6 +390,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -394,6 +410,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -423,6 +440,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -443,11 +461,12 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<GetAllMenuPermissionModel>(sql, new { MenuPermissionId });
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new GetAllMenuPermissionModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -482,6 +501,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -517,6 +537,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -538,6 +559,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -555,6 +577,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -572,6 +595,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -597,6 +621,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -614,6 +639,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -635,6 +661,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -659,6 +686,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -671,11 +699,12 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<ItemTypeModel>(sql,new { Id});
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new ItemTypeModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -711,6 +740,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -728,6 +758,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -752,6 +783,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -778,6 +810,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -793,11 +826,12 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<ItemModel>(sql, new { Id });
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new ItemModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -817,6 +851,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -842,6 +877,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -854,11 +890,12 @@ namespace SuperShop.Repository
                 {
                     connection.Open();
                     var result = await connection.QueryAsync<ItemTransactionTypeModel>(sql, new { Id });
-                    return result.FirstOrDefault();
+                    return result.FirstOrDefault()??new ItemTransactionTypeModel();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
@@ -880,12 +917,13 @@ namespace SuperShop.Repository
                         @DateTimeAction = itemTransactionModel.DateTimeAction
                     };
                     var multiResult = await connection.QueryFirstOrDefaultAsync<MessageHelperModel>("dbo.TransactionItem", parameters, commandType: CommandType.StoredProcedure);
-                    return multiResult;
+                    return multiResult??new MessageHelperModel();
                     
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }

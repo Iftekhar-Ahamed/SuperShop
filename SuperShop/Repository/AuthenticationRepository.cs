@@ -26,6 +26,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }

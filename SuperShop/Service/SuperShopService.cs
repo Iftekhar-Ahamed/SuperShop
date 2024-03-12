@@ -18,7 +18,7 @@ namespace SuperShop.Service
         }
 
         
-        public async Task<KeyValuePair<UserModel?, MessageHelperModel>> GetUserById(long UserId)
+        public async Task<MessageHelperModel> GetUserById(long UserId)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetUserByIdAsync(UserId);
             var msg = new MessageHelperModel();
@@ -27,13 +27,14 @@ namespace SuperShop.Service
                 res.Password = "";
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
                 msg.Message = "Invalid User Id";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res,msg);
+            return msg;
         }
         public async Task<MessageHelperModel> DeleteUserById(long UserId, long ActionBy)
         {
@@ -64,12 +65,13 @@ namespace SuperShop.Service
             }
             return msg;
         }
-        public async Task<KeyValuePair<AllUserInformationViewModel?, MessageHelperModel>> GetUserInformationById(long UserId)
+        public async Task<MessageHelperModel> GetUserInformationById(long UserId)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetUserInformationByIdAsync(UserId);
             var msg = new MessageHelperModel();
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -78,9 +80,9 @@ namespace SuperShop.Service
                 msg.Message = "Invalid User Id";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<PaginationModel, MessageHelperModel>> GetAllUser(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllUser(GetDataConfigModel getDataConfigModel)
         {
             PaginationModel res = new PaginationModel();
             res.data = await _unitOfWorkRepository.SuperShopRepository.GetAllUserAsync(getDataConfigModel);
@@ -88,6 +90,7 @@ namespace SuperShop.Service
             if (res.data != null)
             {
                 res.total = res.data.Count;
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -96,7 +99,7 @@ namespace SuperShop.Service
                 msg.Message = "Invalid User Id";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
         public async Task<MessageHelperModel> CreateUser(UserModel userModel,long ActionBy)
         {
@@ -202,7 +205,7 @@ namespace SuperShop.Service
             var previous = await _unitOfWorkRepository.SuperShopRepository.GetMenuByIdAsync(menuModel.Id);
             var res = await _unitOfWorkRepository.SuperShopRepository.UpdateMenuAsync(menuModel);
             var msg = new MessageHelperModel();
-            if (res != 0)
+            if (res != 0 && previous !=null )
             {
                 var log = new LogModel
                 {
@@ -308,7 +311,7 @@ namespace SuperShop.Service
             var previous = await _unitOfWorkRepository.SuperShopRepository.GetItemTransactionTypeAsync(itemTransactionTypeModel.Id,null);
             var res = await _unitOfWorkRepository.SuperShopRepository.UpdateItemTransactionTypeAsync(itemTransactionTypeModel);
             var msg = new MessageHelperModel();
-            if (res != 0)
+            if (res != 0 && previous != null)
             {
                 var log = new LogModel
                 {
@@ -333,7 +336,7 @@ namespace SuperShop.Service
             }
             return msg;
         }
-        public async Task<KeyValuePair<List<ItemTransactionTypeModel>?,MessageHelperModel>> GeAlltItemTransactionType()
+        public async Task<MessageHelperModel> GeAlltItemTransactionType()
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync();
             var msg = new MessageHelperModel();
@@ -341,15 +344,16 @@ namespace SuperShop.Service
             {
                 msg.Message = "Sucessfully Get";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
                 msg.Message = "Faild to Get";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res,msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<MenuModel>, MessageHelperModel>> GetMenuPermissionByUserId(long UserId)
+        public async Task<MessageHelperModel> GetMenuPermissionByUserId(long UserId)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuPermissionByUserIdAsync(UserId);
@@ -357,15 +361,16 @@ namespace SuperShop.Service
             {
                 msg.Message = "Sucessfull";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res,msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<GetAllMenuPermissionModel>, MessageHelperModel>> GetAllMenuPermission(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllMenuPermission(GetDataConfigModel getDataConfigModel)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenuPermissionAsync(getDataConfigModel);
@@ -373,20 +378,22 @@ namespace SuperShop.Service
             {
                 msg.Message = "Sucessfull";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<GetAllMenuPermissionModel, MessageHelperModel>> GetMenuPermissionById(long MenuPermissionId)
+        public async Task<MessageHelperModel> GetMenuPermissionById(long MenuPermissionId)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuPermissionByIdAsync(MenuPermissionId);
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Sucessfull";
                 msg.StatusCode = 200;
             }
@@ -395,9 +402,9 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserType()
+        public async Task<MessageHelperModel> GetUserType()
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetUserTypeAsync();
@@ -410,9 +417,10 @@ namespace SuperShop.Service
             }
             msg.Message = "Sucessfull";
             msg.StatusCode = 200;
-            return KeyValuePair.Create(commonDDLs, msg);
+            msg.data = commonDDLs;
+            return msg;
         }
-        public async Task<KeyValuePair<List<MenuModel>, MessageHelperModel>> GetAllMenus(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllMenus(GetDataConfigModel getDataConfigModel)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenusAsync(getDataConfigModel);
@@ -420,6 +428,7 @@ namespace SuperShop.Service
             {
                 msg.Message = "Sucessfull";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
@@ -427,9 +436,9 @@ namespace SuperShop.Service
                 msg.StatusCode = 200;
             }
             
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<MenuModel?, MessageHelperModel>> GetMenuById(long menuId)
+        public async Task<MessageHelperModel> GetMenuById(long menuId)
         {
             var msg = new MessageHelperModel();
             var res = await _unitOfWorkRepository.SuperShopRepository.GetMenuByIdAsync(menuId);
@@ -437,6 +446,7 @@ namespace SuperShop.Service
             {
                 msg.Message = "Sucessfull";
                 msg.StatusCode = 200;
+                msg.data = res;
             }
             else
             {
@@ -444,7 +454,7 @@ namespace SuperShop.Service
                 msg.StatusCode = 400;
             }
 
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
         public async Task<MessageHelperModel> DeleteMenuById(long MenuId, long ActionBy)
         {
@@ -504,7 +514,7 @@ namespace SuperShop.Service
             }
             return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetMenuDDL(long? UserId)
+        public async Task<MessageHelperModel> GetMenuDDL(long? UserId)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenusForMenuPermissionAsync(new GetDataConfigModel{ IsActive=true,SearchTerm = UserId.ToString()??""});
             var msg = new MessageHelperModel();
@@ -520,6 +530,7 @@ namespace SuperShop.Service
 
             if (res.Count != 0)
             {
+                msg.data = commonDDLs;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -528,9 +539,9 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(commonDDLs, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetUserDDL()
+        public async Task<MessageHelperModel> GetUserDDL()
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllUserAsync(new GetDataConfigModel { IsActive = true });
             var msg = new MessageHelperModel();
@@ -546,6 +557,7 @@ namespace SuperShop.Service
 
             if (res.Count != 0)
             {
+                msg.data = commonDDLs;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -554,7 +566,7 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(commonDDLs, msg);
+            return msg;
         }
         public async Task<MessageHelperModel> CreateItemType(ItemTypeModel  itemTypeModel,long ActionBy)
         {
@@ -644,13 +656,14 @@ namespace SuperShop.Service
             }
             return msg;
         }
-        public async Task<KeyValuePair<ItemTypeModel,MessageHelperModel>> GetItemTypeById(long Id)
+        public async Task<MessageHelperModel> GetItemTypeById(long Id)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetItemTypeByIdAsync(Id);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -659,15 +672,16 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res,msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<ItemTypeModel>, MessageHelperModel>> GetAllItemType(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllItemType(GetDataConfigModel getDataConfigModel)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTypeAsync(getDataConfigModel);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -676,9 +690,9 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTypeDDL()
+        public async Task<MessageHelperModel> GetItemTypeDDL()
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTypeAsync(new GetDataConfigModel { IsActive = true });
             var msg = new MessageHelperModel();
@@ -694,6 +708,7 @@ namespace SuperShop.Service
 
             if (res.Count != 0)
             {
+                msg.data = commonDDLs;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -702,7 +717,7 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(commonDDLs, msg);
+            return msg;
         }
 
 
@@ -798,13 +813,14 @@ namespace SuperShop.Service
             }
             return msg;
         }
-        public async Task<KeyValuePair<ItemModel, MessageHelperModel>> GetItemById(long Id)
+        public async Task<MessageHelperModel> GetItemById(long Id)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetItemByIdAsync(Id);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -813,15 +829,16 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<ItemModel>, MessageHelperModel>> GetAllItem(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllItem(GetDataConfigModel getDataConfigModel)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemAsync(getDataConfigModel);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -830,9 +847,9 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemDDL()
+        public async Task<MessageHelperModel> GetItemDDL()
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemAsync(new GetDataConfigModel { IsActive = true });
             var msg = new MessageHelperModel();
@@ -848,6 +865,7 @@ namespace SuperShop.Service
 
             if (res.Count != 0)
             {
+                msg.data = commonDDLs;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -856,7 +874,7 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(commonDDLs, msg);
+            return msg;
         }
         public async Task<MessageHelperModel> DeleteItemTransactionTypeById(long Id, long ActionBy)
         {
@@ -888,13 +906,14 @@ namespace SuperShop.Service
             return msg;
         }
         
-        public async Task<KeyValuePair<ItemTransactionTypeModel, MessageHelperModel>> GetItemTransactionTypeById(long Id)
+        public async Task<MessageHelperModel> GetItemTransactionTypeById(long Id)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetItemTransactionTypeByIdAsync(Id);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -903,15 +922,16 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<ItemTransactionTypeModel>, MessageHelperModel>> GetAllItemTransactionType(GetDataConfigModel getDataConfigModel)
+        public async Task<MessageHelperModel> GetAllItemTransactionType(GetDataConfigModel getDataConfigModel)
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync(getDataConfigModel);
             var msg = new MessageHelperModel();
 
             if (res != null)
             {
+                msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -920,9 +940,9 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(res, msg);
+            return msg;
         }
-        public async Task<KeyValuePair<List<CommonDDL>, MessageHelperModel>> GetItemTransactionTypeDDL()
+        public async Task<MessageHelperModel> GetItemTransactionTypeDDL()
         {
             var res = await _unitOfWorkRepository.SuperShopRepository.GetAllItemTransactionTypeAsync(new GetDataConfigModel { IsActive = true });
             var msg = new MessageHelperModel();
@@ -938,6 +958,7 @@ namespace SuperShop.Service
 
             if (res.Count != 0)
             {
+                msg.data = commonDDLs;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;
             }
@@ -946,7 +967,7 @@ namespace SuperShop.Service
                 msg.Message = "No data found";
                 msg.StatusCode = 400;
             }
-            return KeyValuePair.Create(commonDDLs, msg);
+            return msg;
         }
         public async Task<MessageHelperModel> MakeTransaction(ItemTransactionModel itemTransactionModel, UserModel ActionBy)
         {

@@ -9,7 +9,6 @@ namespace SuperShop.Service
     public class LogService : ILogService
     {
         private IUnitOfWorkRepository _unitOfWorkRepository;
-        private IUnitOfWorkService _unitOfWorkService;
         public LogService(IUnitOfWorkRepository unitOfWorkRepository)
         {
             _unitOfWorkRepository = unitOfWorkRepository;
@@ -89,11 +88,8 @@ namespace SuperShop.Service
 
                 if (!object.Equals(originalValue, newValue))
                 {
-                    string originalText = (originalValue != null) ?
-                        originalValue.ToString() : "[NULL]";
-
-                    string newText = (newValue != null) ?
-                        newValue.ToString() : "[NULL]";
+                    string? originalText = (originalValue != null) ? originalValue.ToString() : "[NULL]";
+                    string? newText = (newValue != null) ? newValue.ToString() : "[NULL]";
 
                     res += $"{property.Name}: {originalText} Changed Into : {newText}\n";
                 }

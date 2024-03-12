@@ -20,9 +20,5 @@ public class NotificationHub : Hub
     {
         await _unitOfWorkRepository.SuperShopRepository.SaveUserConnectionIdAsync("", UserId);
     }
-    public override async Task OnDisconnectedAsync(Exception? exception)
-    {
-
-    }
 
 }

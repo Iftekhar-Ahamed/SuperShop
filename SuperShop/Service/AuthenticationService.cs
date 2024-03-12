@@ -17,10 +17,11 @@ namespace SuperShop.Service
             _unitOfWorkRepository = unitOfWorkRepository;
             _configuration = configuration;
          }
-        public async Task<KeyValuePair<UserModel, MessageHelperModel>> LogInUser(string UserName, string PassWord)
+        public async Task<MessageHelperModel> LogInUser(string UserName, string PassWord)
         {
-            var user = await _unitOfWorkRepository.AuthenticationRepository.UserLogInAsync(UserName, PassWord);
             var msg = new MessageHelperModel();
+            var user = await _unitOfWorkRepository.AuthenticationRepository.UserLogInAsync(UserName, PassWord);
+            
             if (user == null)
             {
                 msg.Message = "Invalid UserName";
@@ -32,6 +33,7 @@ namespace SuperShop.Service
                 {
                     msg.Message = "Welcome User";
                     msg.Token = GenerateToken(user,"Access") + " "+ GenerateToken(user, "Refresh");
+                    msg.data = user;
                     msg.StatusCode = 200;
                 }
                 else
@@ -41,7 +43,7 @@ namespace SuperShop.Service
                 }
                 user.Password = null;
             }
-            return KeyValuePair.Create(user, msg);
+            return msg;
         }
         public string GenerateToken(UserModel user,string type)
         {
@@ -54,7 +56,7 @@ namespace SuperShop.Service
             {
                 lifetime = 10;
             }
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserFullName), new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) , new Claim("Type", type) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserFullName), new Claim(ClaimTypes.NameIdentifier, (user.Id??0).ToString()) , new Claim("Type", type) };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -69,7 +71,7 @@ namespace SuperShop.Service
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public async Task<MessageHelperModel> GetNewAccessToken(UserModel userModel)
+        public MessageHelperModel GetNewAccessToken(UserModel userModel)
         {
 
             var res = GenerateToken(userModel, "Access");

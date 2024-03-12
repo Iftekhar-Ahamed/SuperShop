@@ -28,7 +28,7 @@ namespace SuperShop.Controllers
         }
         [HttpGet]
         [Route("GetAccessToken")]
-        public async Task<IActionResult> GetAccessToken()
+        public IActionResult GetAccessToken()
         {
             var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             var userFullNameClaim = HttpContext.User.FindFirst(ClaimTypes.Name);
@@ -39,8 +39,7 @@ namespace SuperShop.Controllers
                     Id = long.Parse(userIdClaim.Value),
                     UserFullName = userFullNameClaim.Value
                 };
-                var msg = new MessageHelperModel();
-                var res = await _unitOfWorkService.AuthenticationService.GetNewAccessToken(UserModel);
+                var res = _unitOfWorkService.AuthenticationService.GetNewAccessToken(UserModel);
 
                 return Ok(res);
             }

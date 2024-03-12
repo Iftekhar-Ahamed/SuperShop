@@ -90,6 +90,7 @@ namespace SuperShop.Middleware
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw ;
             }
         }

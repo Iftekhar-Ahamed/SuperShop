@@ -25,6 +25,7 @@ namespace SuperShop.Service
 
             }catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new Exception("Faild to Send Notification");
             }
         }
