@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using SuperShop.CustomException;
 using SuperShop.IRepository;
 using SuperShop.Model;
 
@@ -25,7 +26,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
     }

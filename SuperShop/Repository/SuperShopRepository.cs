@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using SuperShop.CustomException;
 using SuperShop.IRepository;
 using SuperShop.Model;
 using System.Data;
@@ -41,7 +42,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> UpdateUserAsync(UserModel userModel)
@@ -65,7 +66,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<UserModel?> GetUserByIdAsync(long Id)
@@ -82,7 +83,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<AllUserInformationViewModel?> GetUserInformationByIdAsync(long Id)
@@ -110,7 +111,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> DeleteUserById(long Id)
@@ -127,7 +128,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<AllUserInformationViewModel>> GetAllUserAsync(GetDataConfigModel getDataConfigModel)
@@ -169,7 +170,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
 
@@ -187,7 +188,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<MenuModel?> GetMenuByIdAsync(long MenuId)
@@ -205,7 +206,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> CreateMenuAsync(MenuModel menuModel)
@@ -230,7 +231,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> UpdateMenuAsync(MenuModel menuModel)
@@ -251,7 +252,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<int> CreateUserMenuPermissionAsync(MenuUserPermissionModel obj)
@@ -275,7 +276,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<int> UpdateUserMenuPermissionAsync(MenuUserPermissionModel obj)
@@ -296,7 +297,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<int> CreateItemTransactionTypeAsync(ItemTransactionTypeModel obj)
@@ -320,7 +321,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<int> UpdateItemTransactionTypeAsync(ItemTransactionTypeModel obj)
@@ -340,7 +341,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<ItemTransactionTypeModel?> GetItemTransactionTypeAsync(long Id,bool? IsActive)
@@ -357,7 +358,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<ItemTransactionTypeModel>?> GetAllItemTransactionTypeAsync()
@@ -374,7 +375,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<MenuModel>> GetMenuPermissionByUserIdAsync(long UserId)
@@ -393,7 +394,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<GetAllMenuPermissionModel>> GetAllMenuPermissionAsync(GetDataConfigModel getDataConfigModel)
@@ -422,7 +423,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<GetAllMenuPermissionModel> GetMenuPermissionByIdAsync(long MenuPermissionId)
@@ -447,7 +448,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<MenuModel>> GetAllMenusAsync(GetDataConfigModel getDataConfigModel)
@@ -481,7 +482,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<MenuModel>> GetAllMenusForMenuPermissionAsync(GetDataConfigModel getDataConfigModel)
@@ -516,7 +517,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<UserTypeModel>> GetUserTypeAsync()
@@ -537,7 +538,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> DeleteMenuById(long Id)
@@ -554,7 +555,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> DeleteMenuPermissionByIdAsync(long Id)
@@ -571,7 +572,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> CreateItemTypeAsync( ItemTypeModel itemTypeModel)
@@ -596,7 +597,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> DeleteItemTypeByIdAsync(long Id)
@@ -613,7 +614,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> UpdateItemTypeAsync(ItemTypeModel itemTypeModel)
@@ -634,7 +635,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<ItemTypeModel>> GetAllItemTypeAsync(GetDataConfigModel getDataConfigModel)
@@ -658,7 +659,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<ItemTypeModel> GetItemTypeByIdAsync(long Id)
@@ -675,7 +676,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
 
@@ -710,7 +711,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> DeleteItemByIdAsync(long Id)
@@ -727,7 +728,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<long> UpdateItemAsync(ItemModel item)
@@ -751,7 +752,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<ItemModel>> GetAllItemAsync(GetDataConfigModel getDataConfigModel)
@@ -777,7 +778,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<ItemModel> GetItemByIdAsync(long Id)
@@ -797,7 +798,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
 
@@ -816,7 +817,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         
@@ -841,7 +842,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<ItemTransactionTypeModel> GetItemTransactionTypeByIdAsync(long Id)
@@ -858,7 +859,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<MessageHelperModel> MakeItemTransactionAsync(ItemTransactionModel itemTransactionModel)
@@ -885,7 +886,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
     }

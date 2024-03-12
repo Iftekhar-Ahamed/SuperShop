@@ -40,18 +40,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 
-app.UseExceptionHandler(options => {
-    options.Run(
-        async context =>
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            var ex = context.Features.Get<IExceptionHandlerFeature>();
-            if (ex != null)
-            {
-                await context.Response.WriteAsync(ex.Error.Message);
-            }
-        });
-});
 
 
 if (app.Environment.IsDevelopment())
@@ -61,9 +49,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowOrigin");
 
+app.UseExceptionHandlingMiddleware();
 
 app.UseHttpsRedirection();
-app.UseCustomAuthorization();
+app.UseCustomAuthorizationMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/notificationHub");

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using SuperShop.CustomException;
 using SuperShop.IRepository;
 using SuperShop.Model;
 
@@ -43,7 +44,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<LogModel> GetLogByIdAsync(GetLogModel logModel)
@@ -60,7 +61,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<LogModel>> GetAllLogAsync(GetLogModel logModel)
@@ -80,7 +81,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
         public async Task<List<ItemTransactionLogModel>> GetItemLog(GetLogModel logModel)
@@ -104,7 +105,7 @@ namespace SuperShop.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
     }
