@@ -9,6 +9,7 @@ namespace SuperShop.IRepository
         Task<UserModel> GetUserByIdAsync(long UserId);
         Task<AllUserInformationViewModel> GetUserInformationByIdAsync(long UserId);
         Task<List<AllUserInformationViewModel>> GetAllUserAsync(GetDataConfigModel getDataConfigModel);
+        Task<long> GetAllUserCountAsync(GetDataConfigModel getDataConfigModel);
         Task<long> DeleteUserById(long Id);
         Task<long> SaveUserConnectionIdAsync(String ConnectionId,long UserId);
         Task<MenuModel?> GetMenuByIdAsync(long MenuId);

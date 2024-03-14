@@ -136,6 +136,36 @@ namespace SuperShop.Repository
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
+        public async Task<long> GetAllUserCountAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                var sql = @"SELECT Count(*) AS int
+                            FROM dbo.TblUser u
+                            JOIN [dbo].[UserType] t ON u.UserTypeId = t.Id
+                            WHERE 
+                                (ISNULL(@IsActive,1) = 1 or @IsActive = u.IsActive)
+                                and (u.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%')";
+
+               
+
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryFirstOrDefaultAsync<int>(sql, getDataConfigModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin", 400);
+            }
+        }
         public async Task<List<AllUserInformationViewModel>> GetAllUserAsync(GetDataConfigModel getDataConfigModel)
         {
             try
@@ -158,6 +188,7 @@ namespace SuperShop.Repository
                             WHERE 
                                 (ISNULL(@IsActive,1) = 1 or @IsActive = u.IsActive)
                                 and (u.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%')";
+
                 if (getDataConfigModel.OrderBy != null && getDataConfigModel.OrderColumn != null)
                 {
                     var allowedColumns = new[] { "UserFullName", "UserName", "Id", "UserTypeId" }; 
@@ -166,6 +197,16 @@ namespace SuperShop.Repository
                         sql += $" ORDER BY {getDataConfigModel.OrderColumn} {getDataConfigModel.OrderBy}";
                     }
                 }
+                else
+                {
+                    sql += $" ORDER BY Id ";
+                }
+
+                getDataConfigModel.OffsetRows = getDataConfigModel.PageSize * getDataConfigModel.PageNo;
+
+                sql += @"OFFSET @OffsetRows ROWS
+                         FETCH NEXT @PageSize ROWS ONLY;";
+
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();

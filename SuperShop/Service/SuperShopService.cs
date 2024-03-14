@@ -42,7 +42,7 @@ namespace SuperShop.Service
             var msg = new MessageHelperModel();
             if (res != 0)
             {
-                var log = new LogModel
+                LogModel log = new LogModel
                 {
                     TableId = 1,
                     TablePk = UserId,
@@ -89,7 +89,7 @@ namespace SuperShop.Service
             var msg = new MessageHelperModel();
             if (res.data != null)
             {
-                res.total = res.data.Count;
+                res.total = await _unitOfWorkRepository.SuperShopRepository.GetAllUserCountAsync(getDataConfigModel);
                 msg.data = res;
                 msg.Message = "Successfull";
                 msg.StatusCode = 200;

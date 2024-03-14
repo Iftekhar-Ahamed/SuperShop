@@ -7,7 +7,8 @@
         public long NumSearchTerm { get; set; } 
         public string? OrderBy { get; set; }
         public string? OrderColumn { get; set; }
-        public long PageNo { get; set; }
-        public long PageSize { get; set; }
+        public int PageNo { get; set; }
+        public int OffsetRows { get; set; }
+        public int PageSize { get; set; }
     }
 }
