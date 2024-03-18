@@ -372,13 +372,15 @@ namespace SuperShop.Service
         }
         public async Task<MessageHelperModel> GetAllMenuPermission(GetDataConfigModel getDataConfigModel)
         {
+            PaginationModel res = new PaginationModel();
+            res.data = await _unitOfWorkRepository.SuperShopRepository.GetAllMenuPermissionAsync(getDataConfigModel);
             var msg = new MessageHelperModel();
-            var res = await _unitOfWorkRepository.SuperShopRepository.GetAllMenuPermissionAsync(getDataConfigModel);
-            if (res.Count > 0)
+            if (res.data != null)
             {
-                msg.Message = "Sucessfull";
-                msg.StatusCode = 200;
+                res.total = await _unitOfWorkRepository.SuperShopRepository.GetAllMenuPermissionCountAsync(getDataConfigModel);
                 msg.data = res;
+                msg.Message = "Successfull";
+                msg.StatusCode = 200;
             }
             else
             {

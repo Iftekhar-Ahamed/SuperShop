@@ -22,6 +22,7 @@ namespace SuperShop.IRepository
         Task<ItemTransactionTypeModel?> GetItemTransactionTypeAsync(long Id,bool? IsActive);
         Task<List<ItemTransactionTypeModel>?> GetAllItemTransactionTypeAsync();
         Task<List<MenuModel>> GetMenuPermissionByUserIdAsync(long UserId);
+        Task<long> GetAllMenuPermissionCountAsync(GetDataConfigModel getDataConfigModel);
         Task<List<GetAllMenuPermissionModel>> GetAllMenuPermissionAsync(GetDataConfigModel getDataConfigModel);
         Task<GetAllMenuPermissionModel> GetMenuPermissionByIdAsync(long MenuPermissionId);
         Task<List<MenuModel>> GetAllMenusAsync(GetDataConfigModel getDataConfigModel);

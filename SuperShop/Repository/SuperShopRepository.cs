@@ -455,6 +455,37 @@ namespace SuperShop.Repository
                 throw new CustomizedException("Someting Went wrong. Please Contact with Admin",400);
             }
         }
+        public async Task<long> GetAllMenuPermissionCountAsync(GetDataConfigModel getDataConfigModel)
+        {
+            try
+            {
+                long t = 0;
+                long.TryParse(getDataConfigModel.SearchTerm, out t);
+                getDataConfigModel.NumSearchTerm = t;
+
+                var sql = @"SELECT COUNT(*) AS int 
+                            FROM [dbo].[UserMenuPermission] mp
+                            JOIN [dbo].[Menu] m ON m.Id = mp.MenuId
+                            JOIN [dbo].[tblUser] u ON u.Id = mp.UserId
+                            WHERE  
+                            m.IsActive = 1 
+                            and u.IsActive = 1
+                            and (ISNULL(@IsActive,1) = 1 or @IsActive = mp.IsActive)
+                            and (u.Id = @NumSearchTerm or m.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%' or m.MenuName LIKE '%' + @SearchTerm + '%')";
+
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+                    var result = await connection.QueryFirstOrDefaultAsync<int>(sql, getDataConfigModel);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new CustomizedException("Someting Went wrong. Please Contact with Admin", 400);
+            }
+        }
         public async Task<List<GetAllMenuPermissionModel>> GetAllMenuPermissionAsync(GetDataConfigModel getDataConfigModel)
         {
             try
@@ -472,6 +503,20 @@ namespace SuperShop.Repository
                             and u.IsActive = 1
                             and (ISNULL(@IsActive,1) = 1 or @IsActive = mp.IsActive)
                             and (u.Id = @NumSearchTerm or m.Id = @NumSearchTerm or u.UserFullName LIKE '%' + @SearchTerm + '%' or m.MenuName LIKE '%' + @SearchTerm + '%')";
+                if(getDataConfigModel.OrderBy != null)
+                {
+
+                }
+                else
+                {
+                    sql += $" ORDER BY mp.Id ";
+                }
+
+                getDataConfigModel.OffsetRows = getDataConfigModel.PageSize * getDataConfigModel.PageNo;
+
+                sql += @"OFFSET @OffsetRows ROWS
+                         FETCH NEXT @PageSize ROWS ONLY;";
+
                 using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
