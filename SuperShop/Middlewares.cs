@@ -12,5 +12,9 @@ namespace SuperShop
         {
             return builder.UseMiddleware<ExceptionHandlingMiddleware>();
         }
+        public static IApplicationBuilder UserEncryptionDecryption(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<EncryptionDecryption>();
+        }
     }
 }

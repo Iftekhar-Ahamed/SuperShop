@@ -48,9 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("AllowOrigin");
-
+app.UserEncryptionDecryption();
 app.UseExceptionHandlingMiddleware();
-
 app.UseHttpsRedirection();
 app.UseCustomAuthorizationMiddleware();
 app.UseAuthentication();
